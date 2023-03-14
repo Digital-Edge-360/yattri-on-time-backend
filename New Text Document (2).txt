@@ -1,0 +1,85 @@
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const path = require('path');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
+
+// const {User}=require('./models/User')
+
+
+
+app.use(fileUpload());
+app.use('/files', express.static(path.join(__dirname, 'data')))
+
+
+
+//To parse URL encoded data
+app.use(bodyParser.urlencoded({ extended: false }));
+
+//To parse json data
+app.use(bodyParser.json());
+
+//To Parse Cookies
+app.use(cookieParser());
+
+
+
+
+app.post('/:id', (req, res) => {
+    console.log(`Params is ${req.params.id}`);
+    console.log(req.body);
+    console.log(req.files);
+    let img=req.files.image;
+
+    let user=new User({
+        name: 'Computer User',
+        image:'new Image.png',
+        phone:949494,
+    });
+    // user.validate().then(()=>{
+    //     res,json("ok");
+    // }).catch((err)=>{
+    //     res.json(err.errors)
+    // });
+
+
+
+
+
+    user.save().then((data)=>{res.json(data)}).catch((err)=>{
+        res.json(err);
+    })
+    // uploadPath = __dirname + '/uploads/'+img.md5+'__'+Date.now()+'.'+img.name.split('.').at(-1);
+    // img.mv(uploadPath,(err)=>{
+    //     console.log(err);
+    // });
+  
+
+
+
+    // console.log(uploadPath)
+    //console.log(req.cookies);
+    // res.send('Got a POST request')
+});
+
+
+
+
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+});
+
+
+
+app.get('*', (req, res) => {
+    res.send('Sorry, this is an invalid URL.');
+});;
+
+
+
+app.listen(process.env.SERVER_PORT, () => {
+    console.log(`Api Running on port ${process.env.SERVER_PORT}`)
+})
+

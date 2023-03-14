@@ -1,0 +1,83 @@
+
+
+response.status(202).json({ message: "data removed"});
+response.status(400).json({message:"invalid id"});
+response.status(500).json({message:"internal server error"});
+response.status(404).json({message:"no data found"});
+response.status(403).json({message:"request not allowed"});
+response.status(204).json({message:"data Updated"});
+response.status(201).json({ message: "data saved", data:  });
+response.status(400).json({message:" requied"});
+response.status(200).json(data);
+
+
+
+
+ if (data.length == 0)
+            response.status(404).json({message:"no data found"});
+        else
+            response.status(200).json(data);
+
+
+
+
+
+
+
+
+
+
+
+Api Documentation:
+base url: domain/api/
+4 type method allowed 
+
+GET request  (get all the resource)
+GET/id request (get specific resource)
+POST request (add new resource)
+PUT/id request (update specific resource )
+DELETE/id request (delete specific resource );
+
+
+status code's : 200,201,202,400,404,500
+
+200:if resource found.
+201:successfully resource created.
+202:delete request accepted/resource remove successfully.
+204:resource updated.
+400:invalid resource data send.
+404:if resource not found.
+500:internal server error.
+
+
+response:
+sucess:
+{
+message:"",
+data:{}
+}
+
+error:{
+message:
+}
+
+
+//////////////////////////////////////////
+
+resource:
+advertisement
+title(string) (requied)
+image(file)(png,jpeg,jpg)(max size 7mb) (requied)
+url:redirection url (String) (optional)
+status:Boolean(true=active false=darft) (requied)
+
+
+
+
+
+https://www.cyclic.sh/
+//Bilash1717171151515
+//mongosh "mongodb+srv://cluster0.4fozbci.mongodb.net/myFirstDatabase" --apiVersion 1 --username didibhai777
+
+//k3ezV5c6FK30PUGM
+//bilash
