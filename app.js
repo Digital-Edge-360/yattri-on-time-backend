@@ -19,6 +19,7 @@ const ReminderRouter = require('./api/reminder/reminder.route');
 const SubscriptionRouter = require('./api/subscription/subscription.route');
 const TransactionRouter = require('./api/transaction/transaction.route');
 const SubscribeRouter = require('./api/subscribe/subscribe.route');
+const AdminRouter=require('./api/admin/admin.route');
 
 /**Create Object Of Express */
 const app = express();
@@ -49,9 +50,7 @@ app.use("/api/reminder", ReminderRouter);
 app.use("/api/subscription", SubscriptionRouter);
 app.use("/api/payment", TransactionRouter);
 app.use("/api/subscribe", SubscribeRouter);
-
-
-
+app.use("/api/admin", AdminRouter);
 
 app.get('/', (req, res) => {
     res.send('Api Working!')
