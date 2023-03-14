@@ -102,6 +102,11 @@ const Remove_ = (request, response) => {
     Reminder.findByIdAndDelete(request.params.id).then((data) => {
         if (data == null)
         response.status(400).json({message:"invalid id"});
+        else if(data.status===true){
+        User.findOneAndUpdate({_id:data.user_id}).then((userData)=>{
+            userData.reminder+=1;
+        })
+        }
         else
         response.status(202).json({ message: "data removed"});
     }).catch((err) => { response.status(400).json({message:"invalid id"});})
