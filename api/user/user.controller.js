@@ -161,7 +161,7 @@ const Register_ = (request, response) => {
             if (data == null) {
                 let temp = new User();
                 temp.name = name;
-                temp.phone=phone;
+                temp.phone=uphone;
                 temp.verified=true;
                 temp.save();
                 var token = jwt.sign({temp}, process.env.JWT_SECRET,{ expiresIn: '30d' });
