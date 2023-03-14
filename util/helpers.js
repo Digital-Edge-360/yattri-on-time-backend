@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 
  const phoneValidator=(phone)=>{
     let Regx=new RegExp(/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/);
@@ -20,4 +21,22 @@
         return phone;
     }
  }
- module.exports={phoneValidator,formatPhone}
+
+const comparePassword=async (password1,password2)=>{
+   try {
+     const isMatch=await bcrypt.compare(password1,password2);
+     return isMatch
+   } catch (error) {
+    return false;
+   }
+}
+
+const hashPassword=async (password)=>{
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password,salt);
+    return hash;
+}
+
+ module.exports={phoneValidator,formatPhone,comparePassword,hashPassword}
+
+ 
