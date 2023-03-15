@@ -12,6 +12,7 @@ module.exports={
                     res.status(400).json({ message: "invalid token"});
                 }
                 else{
+                    req.user=obj;
                     next();
                 }
             }) 

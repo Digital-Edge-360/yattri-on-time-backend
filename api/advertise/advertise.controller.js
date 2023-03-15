@@ -14,7 +14,7 @@ const Add_ = (request, response) => {
         let { size, name, md5 } = request.files.image;
         let img = request.files.image;
         let ext = name.split('.').at(-1);
-        if (size > 700000)
+        if (size > 7000000)
             response.status(400).json({ message: 'image size less than 7mb' });
 
         else if (!validExt.includes(ext))
@@ -69,8 +69,9 @@ const Update_ = (request, response) => {
                         data.image=fname;
                     }
             }
+           
             data.save().then((temp)=>{
-                response.status(204).json({message:"data Updated"})
+                response.status(200).json({message:"data updated",data})
             }).catch((err)=>{
                 response.status(500).json({message:"internal server error"})
             })

@@ -4,7 +4,6 @@ var jwt = require('jsonwebtoken');
 var fs = require('fs');
 
 
-
 const Add_ = (request, response) => {
     let validExt = ['jpg', 'jpeg', 'png'];
     let { name, phone } = request.body;
@@ -51,6 +50,10 @@ const Update_ = (request, response) => {
             response.status(400).json({ message: "invalid id" });
         else {
             user.name=name?name:user.name;
+            if(phone){
+                if(!phoneValidator(phone)) return response.status(400).json({ message: "invalid phone number" })
+                const usernumber=formatPhone(phone);
+            user.phone=usernumber?usernumber:user.phone;}
             user.status=status!=undefined?status:user.status;
             if (request.files != null && request.files.image != null){
                 let { size, md5 } = request.files.image;
@@ -163,6 +166,7 @@ const Register_ = (request, response) => {
                 temp.name = name;
                 temp.phone=uphone;
                 temp.verified=true;
+                temp.status=true;
                 temp.save();
                 var token = jwt.sign({temp}, process.env.JWT_SECRET,{ expiresIn: '30d' });
                 response.json({ user: temp,token });
@@ -170,7 +174,7 @@ const Register_ = (request, response) => {
             else {
                 var token = jwt.sign(data, process.env.JWT_SECRET,{ expiresIn: '30d' });
                 response.json({ user: data,token });
-            }
+            } 
         }).catch((err) => {
             console.log(err)
             response.status(500).json({ message: "internal server error" });
