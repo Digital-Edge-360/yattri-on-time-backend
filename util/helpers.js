@@ -5,7 +5,10 @@ const bcrypt = require('bcryptjs');
     return Regx.test(phone);
  }
 
-
+const emailValidetor = (email) =>{
+    let Regx=new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    return Regx.test(email);
+}
  const formatPhone=(phone)=>{
     let ph=phone.toString().length;
     if(ph==10)
@@ -37,6 +40,6 @@ const hashPassword=async (password)=>{
     return hash;
 }
 
- module.exports={phoneValidator,formatPhone,comparePassword,hashPassword}
+ module.exports={phoneValidator,formatPhone,emailValidetor,comparePassword,hashPassword}
 
  

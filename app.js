@@ -20,6 +20,7 @@ const SubscriptionRouter = require('./api/subscription/subscription.route');
 const TransactionRouter = require('./api/transaction/transaction.route');
 const SubscribeRouter = require('./api/subscribe/subscribe.route');
 const AdminRouter=require('./api/admin/admin.route');
+const FaqRouter = require('./api/faq/faq.route');
 
 /**Create Object Of Express */
 const app = express();
@@ -51,7 +52,7 @@ app.use("/api/subscription", SubscriptionRouter);
 app.use("/api/payment", TransactionRouter);
 app.use("/api/subscribe", SubscribeRouter);
 app.use("/api/admin", AdminRouter);
-
+app.use("/api/faq",FaqRouter)
 app.get('/', (req, res) => {
     res.send('Api Working!')
 });
