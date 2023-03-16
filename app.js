@@ -62,7 +62,7 @@ app.get("/", (req, res) => {
     res.send("Api Working!");
 });
 
-app.get("*", (req, res) => {
+app.all("*", (req, res) => {
     res.send("Sorry, this is an invalid URL.");
 });
 
