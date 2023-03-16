@@ -8,6 +8,8 @@ const path = require("path");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
+const cors = require("cors");
+const morgan = require("morgan");
 
 /*************************************
  * Exports All The Routers From Api
@@ -29,6 +31,10 @@ const app = express();
  * Apply All The Basic Middileware To Handle The Request
  * ******************************************************/
 
+// cors
+app.use(cors());
+// morgan
+app.use(morgan("dev"));
 //To parse files
 app.use(fileUpload());
 //To parse URL encoded data
