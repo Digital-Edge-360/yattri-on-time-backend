@@ -1,11 +1,12 @@
 const router=require("express").Router();
 const {validateTocken}=require('../../auth/tokenValidator');
 const {Find_, FindAll_, Add_, Update_, Remove_ }=require('./subscription.controller');
-router.post("/",validateTocken,Add_);
-router.get("/:id",validateTocken,Find_);
-router.get("/",validateTocken,FindAll_);
-router.patch("/:id",validateTocken,Update_);
-router.delete("/:id",validateTocken,Remove_);
+const adminOnly = require("../../middleware/adminOnly.middleware")
+router.post("/",validateTocken,adminOnly,Add_);
+router.get("/:id",validateTocken,adminOnly,Find_);
+router.get("/",validateTocken,adminOnly,FindAll_);
+router.patch("/:id",validateTocken,adminOnly,Update_);
+router.delete("/:id",validateTocken,adminOnly,Remove_);
 
  /*To handle all invalid request */  
  router.all("*",(request,response)=>{
