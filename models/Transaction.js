@@ -11,7 +11,7 @@ const TransactionSchema = new Schema({
         default:0,
         min:0
     },
-    user_id:String,
+    user_id:{type:String},
 
     date: {
         type:Date,
