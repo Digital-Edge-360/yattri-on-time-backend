@@ -1,38 +1,36 @@
-var mongoose=require('mongoose');
-var con=mongoose.createConnection(process.env.MONGO_DB_URL);
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const SubscribeSchema = new Schema({
     subcription_id: {
-        type:String,
-        required:true,
+        type: String,
+        required: true,
     },
     user_id: {
-        type:String,
-        required:true,
+        type: String,
+        required: true,
     },
     start_date: {
-        type:Date,
-        default:new Date(),
+        type: Date,
+        default: new Date(),
     },
     expire_date: {
-        type:Date,
-        required:true
+        type: Date,
+        required: true,
     },
-    price:{
-        type:Number,
-        required:true,
-        min:0
+    price: {
+        type: Number,
+        required: true,
+        min: 0,
     },
-    no_of_reminder:{
-        type:Number,
-        default:99999999,
+    no_of_reminder: {
+        type: Number,
+        default: 99999999,
     },
-    transaction_id:{
-        type:String,
-        default:true,
-    }
-  });
+    transaction_id: {
+        type: String,
+        default: true,
+    },
+});
 
-  
-let Subscribe=con.model('Subscribe', SubscribeSchema);
-module.exports = {Subscribe}
+const Subscribe = mongoose.model("Subscribe", SubscribeSchema);
+module.exports = { Subscribe };

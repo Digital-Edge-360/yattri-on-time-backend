@@ -1,22 +1,20 @@
-var mongoose=require('mongoose');
-var con=mongoose.createConnection(process.env.MONGO_DB_URL);
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const AdvertisementSchema = new Schema({
     title: {
-        type:String,
-        default:null
+        type: String,
+        default: null,
     },
     image: {
-        type:String,
-        required:true
+        type: String,
+        required: true,
     },
-    url:{
-        type:String,
-        required:false,
+    url: {
+        type: String,
+        required: false,
     },
-    status:Boolean
-  });
+    status: Boolean,
+});
 
-
-  let Advertisement=con.model('Advertisement', AdvertisementSchema);
-  module.exports = {Advertisement}
+const Advertisement = mongoose.model("Advertisement", AdvertisementSchema);
+module.exports = { Advertisement };
