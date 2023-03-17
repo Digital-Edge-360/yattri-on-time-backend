@@ -23,6 +23,7 @@ const TransactionRouter = require("./api/transaction/transaction.route");
 const SubscribeRouter = require("./api/subscribe/subscribe.route");
 const AdminRouter = require("./api/admin/admin.route");
 const FaqRouter = require("./api/faq/faq.route");
+const connectDB = require("./db/connect.js");
 
 /**Create Object Of Express */
 const app = express();
@@ -68,6 +69,7 @@ app.all("*", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
+    connectDB(process.env.MONGO_DB_URL);
     console.log(`Api Running on port ${PORT}`);
 });
 
