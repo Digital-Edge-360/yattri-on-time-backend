@@ -18,13 +18,13 @@ const ReminderSchema = new Schema({
         type: Date,
         required: true,
     },
-    number: {
-        type: String,
-        required: true,
-    },
-    source: {
-        type: String,
-        required: true,
+    call_time:
+        [{type:Date,
+        required:true}]
+    ,
+    number:{
+        type:String,
+        required:true,
     },
     destination: {
         type: String,
@@ -42,7 +42,15 @@ const ReminderSchema = new Schema({
         type: Boolean,
         default: true,
     },
-});
+    status:{
+        type:Boolean,
+        default:true
+    },
+    frequency:{
+        type:Number,
+        default:1,
+    }
+  });
 
 const Reminder = mongoose.model("Reminder", ReminderSchema);
 module.exports = { Reminder };

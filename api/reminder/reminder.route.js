@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { validateTocken } = require('../../auth/tokenValidator');
+
 const { Find_, FindAll_, Add_, Update_, Remove_, FindUser_ } = require('./reminder.controller');
 router.get("/:id", validateTocken, Find_);
 router.get("/", validateTocken, FindAll_);

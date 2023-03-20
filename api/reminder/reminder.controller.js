@@ -1,5 +1,7 @@
 const { Reminder } = require("../../models/Reminder");
 const { User } = require("././../../models/User");
+const { dividerTime } = require('../../util/helpers.js');
+const moment = require('moment');
 const Add_ = (request, response) => {
     let cat = ["train", "bus", "flight", "others"];
     let {
@@ -12,7 +14,11 @@ const Add_ = (request, response) => {
         destination,
         message,
         user_id,
-    } = request.body;
+   , frequency } = request.body;
+    let times
+    if (date_time && call_time && frequency) {
+        times = dividerTime(date_time, call_time, frequency)
+    }
     if (
         !category ||
         !date_time ||
@@ -23,12 +29,12 @@ const Add_ = (request, response) => {
         !destination ||
         !user_id
     )
-        response.status(400).json({
+        return response.status(400).json({
             message:
                 "category,date_time,title,call_time,number,source,destination,user_id requied",
         });
     else if (!cat.includes(category))
-        response.status(400).json({ message: "invalid category" });
+        return response.status(400).json({ message: "invalid category" });
     else {
         User.findById(user_id)
             .then((data) => {
