@@ -13,9 +13,8 @@ const FAQCreate_ = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "user not found" })
         }
-        const caeatefaq = await FAQ.create(req.body)
-
-        return res.status(201).json(caeatefaq)
+        const createfaq = await FAQ.create(req.body)
+        return res.status(201).json(createfaq) 
     }
     catch (err) {
         return res.status(500).json({ message: "somthing want wrong" })

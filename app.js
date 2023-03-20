@@ -23,6 +23,8 @@ const TransactionRouter = require("./api/transaction/transaction.route");
 const SubscribeRouter = require("./api/subscribe/subscribe.route");
 const AdminRouter = require("./api/admin/admin.route");
 const FaqRouter = require("./api/faq/faq.route");
+const ReviewRouter = require("./api/review/review.route");
+
 const connectDB = require("./db/connect.js");
 
 /**Create Object Of Express */
@@ -59,6 +61,7 @@ app.use("/api/payment", TransactionRouter);
 app.use("/api/subscribe", SubscribeRouter);
 app.use("/api/admin", AdminRouter);
 app.use("/api/faq", FaqRouter);
+app.use("/api/review", ReviewRouter);
 app.get("/", (req, res) => {
     res.send("Api Working!");
 });
