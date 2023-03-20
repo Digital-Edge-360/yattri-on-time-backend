@@ -14,7 +14,7 @@ const Add_ = (request, response) => {
         destination,
         message,
         user_id,
-   , frequency } = request.body;
+    frequency } = request.body;
     let times
     if (date_time && call_time && frequency) {
         times = dividerTime(date_time, call_time, frequency)
@@ -52,7 +52,7 @@ const Add_ = (request, response) => {
                     reminder.category = category;
                     reminder.date_time = new Date(date_time);
                     reminder.title = title;
-                    reminder.call_time = new Date(call_time);
+                    reminder.call_time = times;
                     reminder.number = number;
                     reminder.source = source;
                     reminder.destination = destination;

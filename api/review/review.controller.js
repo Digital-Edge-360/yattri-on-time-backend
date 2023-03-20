@@ -24,11 +24,11 @@ const Add_ = async (req, res) => {
 const Findall_ = async (req, res) => {
       try {
         const userId = req.user.data._id
-        const reviews = await Review.find({userId:userId,status:true}).populate("userId")     
+        const reviews = await Review.find({userId:userId,status:true}).populate("userId","name image")     
         return res.status(200).json(reviews)
      
       } catch (error) {
-        
+        return res.status(500).json(error.message)
       }
 }
 

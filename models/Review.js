@@ -1,5 +1,4 @@
-var mongoose=require('mongoose');
-var con=mongoose.createConnection(process.env.MONGO_DB_URL);
+const mongoose=require('mongoose');
 const Schema = mongoose.Schema;
 
 const ReviewSchema = new Schema({
@@ -23,5 +22,5 @@ const ReviewSchema = new Schema({
 })
 
 
-let Review=con.model('Review', ReviewSchema);
+const  Review=mongoose.model('Review', ReviewSchema);
 module.exports = {Review}
