@@ -68,5 +68,16 @@ const reviewJoi = Joi.object({
     isDeleted:Joi.boolean()
 
   })
-module.exports = { phoneValidator, formatPhone, emailValidetor, comparePassword, hashPassword, dividerTime,reviewJoi }
+
+  const UpdatereviewJoi = Joi.object({
+    userId: Joi.string().optional(),
+
+    rating:Joi.number().min(1).max(5).optional(),
+
+    message:Joi.string().optional(),
+  
+    isDeleted:Joi.boolean()
+
+  })
+module.exports = { phoneValidator, formatPhone, emailValidetor, comparePassword, hashPassword, dividerTime,reviewJoi,UpdatereviewJoi }
 

@@ -16,7 +16,7 @@ const ReviewSchema = new Schema({
         maxlength:5,
         required:true,
     },
-    isDeleted:{
+    status:{
         type:Boolean,
         default:false
       }
