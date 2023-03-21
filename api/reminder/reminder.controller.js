@@ -160,7 +160,7 @@ const FindUser_ = (request, response) => {
 
 const FindAll_ = (request, response) => {
     Reminder.find()
-        .populate("user_id")
+        .populate("user_id", "name phone -_id")
         .then((data) => {
             if (data.length == 0)
                 response.status(404).json({ message: "no data found" });
