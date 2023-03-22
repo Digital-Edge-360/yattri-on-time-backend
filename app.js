@@ -38,6 +38,8 @@ const app = express();
 app.use(cors());
 // morgan
 app.use(morgan("dev"));
+// host images
+app.use(express.static(path.join(__dirname, "uploads")));
 //To parse files
 app.use(fileUpload());
 //To parse URL encoded data

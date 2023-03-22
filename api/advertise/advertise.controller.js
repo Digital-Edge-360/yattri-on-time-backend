@@ -2,11 +2,10 @@ const { Advertisement } = require("../../models/Advertisement");
 var fs = require("fs");
 
 const Add_ = (request, response) => {
-    console.log(request.files);
     let { title, url, status } = request.body;
-    if (!title || status == undefined)
+    if (title === undefined || status === undefined)
         response.status(400).json({ message: "title,status,image requied" });
-    else if (request.files == null || request.files.image == null)
+    else if (!request?.files || !request?.files?.image)
         response
             .status(400)
             .json({ message: "title,status,image requied bbbb" });
@@ -29,9 +28,7 @@ const Add_ = (request, response) => {
             advertise.status = status;
             advertise.url = url ? url : null;
             advertise.save();
-            response
-                .status(201)
-                .json({ message: "data saved", data: advertise });
+            response.status(201).json(advertise);
         }
     }
 };
@@ -128,7 +125,7 @@ const FindAll_ = (request, response) => {
 const Remove_ = (request, response) => {
     Advertisement.findByIdAndDelete(request.params.id)
         .then((data) => {
-            if (data == null)
+            if (data === null)
                 response.status(400).json({ message: "invalid id" });
             else {
                 var filePath = __dirname + "/../../uploads/" + data.image;
