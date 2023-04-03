@@ -52,13 +52,14 @@ const Add_ = (request, response) => {
                     reminder.category = category;
                     reminder.date_time = new Date(date_time);
                     reminder.title = title;
-                    reminder.call_times = times;
                     reminder.call_time = new Date(call_time);
+                    reminder.call_times = times;
                     reminder.number = number;
                     reminder.source = source;
                     reminder.destination = destination;
                     reminder.message = message ? message : null;
                     reminder.user_id = user_id;
+                    reminder.frequency = frequency;
                     data.reminder = data.reminder - 1;
                     data.save();
                     reminder.save();
