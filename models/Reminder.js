@@ -18,13 +18,17 @@ const ReminderSchema = new Schema({
         type: Date,
         required: true,
     },
-    call_time:
+    call_times:
         [{type:Date,
         required:true}]
     ,
     number:{
         type:String,
         required:true,
+    },
+    source:{
+        type:String,
+        default:true
     },
     destination: {
         type: String,
@@ -41,10 +45,6 @@ const ReminderSchema = new Schema({
     status: {
         type: Boolean,
         default: true,
-    },
-    status:{
-        type:Boolean,
-        default:true
     },
     frequency:{
         type:Number,

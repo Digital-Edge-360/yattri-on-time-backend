@@ -52,7 +52,8 @@ const Add_ = (request, response) => {
                     reminder.category = category;
                     reminder.date_time = new Date(date_time);
                     reminder.title = title;
-                    reminder.call_time = times;
+                    reminder.call_times = times;
+                    reminder.call_time = new Date(call_time);
                     reminder.number = number;
                     reminder.source = source;
                     reminder.destination = destination;
