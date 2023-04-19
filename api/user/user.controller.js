@@ -2,6 +2,11 @@ const { User } = require("../../models/User");
 const { phoneValidator, formatPhone } = require("../../util/helpers");
 var jwt = require("jsonwebtoken");
 var fs = require("fs");
+const {
+    sendVerificationSms,
+    callAndSay,
+    remindUser,
+} = require("../../services/twilio.service.js");
 
 const Add_ = (request, response) => {
     let validExt = ["jpg", "jpeg", "png"];
@@ -217,21 +222,52 @@ const SendOtp_ = (request, response) => {
         let uphone = formatPhone(phone);
         User.findOne({ phone: uphone })
             .then((data) => {
-                if (data == null)
-                    response.status(200).json({
-                        message: "user not exist",
-                        otp: Math.ceil(Math.random() * 9000 + 1000),
-                    });
-                else
-                    response.status(200).json({
-                        message: "user registerd",
-                        info: data,
-                        otp: Math.ceil(Math.random() * 9000 + 1000),
-                    });
+                if (data == null) {
+                    sendVerificationSms(uphone)
+                        .then((res) => {
+                            response.status(200).json({
+                                message: "user not exist",
+                                otp: res.otp,
+                            });
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            response.status(500).json({
+                                message: "failed to send verification code",
+                            });
+                        });
+                } else
+                    sendVerificationSms(uphone)
+                        .then((res) => {
+                            response.status(200).json({
+                                message: "user not exist",
+                                info: data,
+                                otp: res.otp,
+                            });
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            response.status(500).json({
+                                message: "failed to send verification code",
+                            });
+                        });
             })
             .catch((err) => {
                 response.status(500).json({ message: "internal server error" });
             });
+    }
+};
+
+const RemindUser_ = async (req, res) => {
+    try {
+        const { to, message } = req.body;
+        const status = await remindUser({
+            to,
+            message,
+        });
+        res.status(200).json({ message: "call was successfull", status });
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" });
     }
 };
 
@@ -244,4 +280,5 @@ module.exports = {
     Login_,
     Register_,
     SendOtp_,
+    RemindUser_,
 };
