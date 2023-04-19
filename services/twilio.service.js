@@ -55,6 +55,7 @@ const remindUser = async (remind) => {
         return result;
     } catch (error) {
         console.log(error);
+        return error;
     }
 };
 
