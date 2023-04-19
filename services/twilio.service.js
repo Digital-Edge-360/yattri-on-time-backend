@@ -47,6 +47,7 @@ const generateCallDetails = async (message) => {
         file = await fs.open(path.join(newDir, fName), "w");
     }
     file.writeFile(body, "utf8");
+    file.close();
     return fName;
 };
 
