@@ -51,17 +51,21 @@ const generateCallDetails = async (message) => {
 };
 
 const remindUser = async (remind) => {
+    const fName = await generateCallDetails(remind.message);
+    const fUrl = `${process.env.ORIGIN}/files/voices/${fName}`;
     try {
-        const fName = await generateCallDetails(remind.message);
         const result = await client.calls.create({
-            url: `${process.env.ORIGIN}/files/voices/${fName}`,
+            url: fUrl,
             to: remind.to,
             from: process.env.SENDER_PHONE_NUMBER,
         });
-        return result;
+        return {
+            result,
+            fUrl,
+        };
     } catch (error) {
         console.log(error);
-        return error;
+        return { error, fUrl };
     }
 };
 
