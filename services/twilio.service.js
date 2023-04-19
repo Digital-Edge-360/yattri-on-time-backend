@@ -39,8 +39,13 @@ const generateCallDetails = async (message) => {
     const body = response.toString();
     const fName = `voice_${new Date().getTime().toString()}.xml`;
     const dir = path.join(process.cwd(), "data", "voices");
-    const newDir = await fs.mkdir(path.join(dir));
-    const file = await fs.open(path.join(newDir, fName), "w");
+    let file;
+    try {
+        file = await fs.open(path.join(dir, fName), "w");
+    } catch {
+        const newDir = await fs.mkdir(path.join(dir));
+        file = await fs.open(path.join(newDir, fName), "w");
+    }
     file.writeFile(body, "utf8");
     return fName;
 };
