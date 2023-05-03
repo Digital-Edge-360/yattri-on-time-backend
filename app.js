@@ -65,7 +65,7 @@ app.use("/api/admin", AdminRouter);
 app.use("/api/faq", FaqRouter);
 app.use("/api/review", ReviewRouter);
 app.get("/", (req, res) => {
-    res.send("Api Working!");
+    res.send("Api is Working! ");
 });
 
 app.all("*", (req, res) => {
