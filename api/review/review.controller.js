@@ -35,7 +35,7 @@ const Findall_ = async (req, res) => {
         const reviews = await Review.find({ status: true })
             .populate("userId", "name image")
             .limit(10)
-            .sort("rating");
+            .sort("-rating");
         return res.status(200).json(reviews);
     } catch (error) {
         return res.status(500).json(error.message);

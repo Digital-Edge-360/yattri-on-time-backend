@@ -3,17 +3,14 @@ const moment = require("moment");
 const cron = require("node-cron");
 const schedule = require("node-schedule");
 const { getISTTime } = require("../util/helpers.js");
+const { remindUser } = require("../services/twilio.service.js");
 
 function checkReminders(frequency) {
     return cron.schedule(`*/${frequency} * * * *`, async function () {
         const currTime = getISTTime();
         const nextTime = new Date(
-            currTime.getTime() + frequency * 4 * 60 * 60 * 1000
-        ); // TODO: set time 1 hour
-
-        // const nextSampleTime = new Date(
-        //     currTime.getTime() + frequency * 2 * 60 * 60 * 1000
-        // );
+            currTime.getTime() + frequency * 59 * 60 * 1000
+        ); //set time 1 hour
 
         const reminders = await Reminder.find({
             call_times: {
@@ -22,12 +19,10 @@ function checkReminders(frequency) {
                     $lt: nextTime,
                 },
             },
-        });
-
-        // const callTimes = reminders.map((rem) => rem.call_times);
+        }).populate("user_id", "name");
         const filteredReminders = reminders.reduce((acc, curr) => {
             const hasCallTime = curr.call_times.filter(
-                (callTime) => callTime >= currTime && callTime <= nextTime
+                (callTime) => callTime >= currTime && callTime < nextTime
             );
             if (hasCallTime.length) {
                 curr.call_times = hasCallTime;
@@ -36,17 +31,28 @@ function checkReminders(frequency) {
             return acc;
         }, []);
 
-        console.log({
-            filteredReminders: filteredReminders.map((rem) => rem.call_times),
-            currTime,
-            nextTime,
-        });
-        // todo: schedule calls
-        // for (const reminder of filteredReminders) {
+        for (const reminder of filteredReminders) {
+            const reminderCallTimes = reminder.call_times;
+            for (const callTime of reminderCallTimes) {
+                const callTimeDate = new Date(callTime);
+                const timeDiff = callTimeDate.getTime() - currTime.getTime();
+                const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+                const minutes = Math.floor(timeDiff / (1000 * 60)) - hours * 60;
+                console.log({ hours, minutes });
+                const messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${reminder.category} from ${reminder.source} to ${reminder.destination} after ${hours} hours and ${minutes} minutes. The message you wanted is: ${reminder.message}`;
 
-        // }
-
-        schedule.scheduleJob("call");
+                setTimeout(async () => {
+                    // todo: make Calls
+                    const status = await remindUser({
+                        to: reminder.number,
+                        message: messageToSay,
+                    });
+                    console.log({
+                        callStatus: status,
+                    });
+                }, timeDiff);
+            }
+        }
     });
 }
 
