@@ -66,13 +66,12 @@ const dividerTime = (date_time, call_time, frequency) => {
 };
 
 const getISTTime = () => {
-    const currentTime = new Date();
-    const currentOffset = currentTime.getTimezoneOffset();
-    const ISTOffset = 330; // IST offset UTC +5:30
-    const ISTTime = new Date(
-        currentTime.getTime() + (ISTOffset + currentOffset) * 60000
-    );
-    return ISTTime;
+    const currentTime = new Date(Date.now());
+
+    currentTime.setHours(currentTime.getHours() + 5);
+    currentTime.setMinutes(currentTime.getMinutes() + 30);
+
+    return currentTime;
 };
 
 const reviewJoi = Joi.object({
