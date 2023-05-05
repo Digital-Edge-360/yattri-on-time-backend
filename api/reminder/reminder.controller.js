@@ -64,21 +64,13 @@ const Add_ = (request, response) => {
                     response.status(400).json({ message: "invalid id" });
                 //validate valid subscription
                 //end logic
-                else if (data.reminder == 0) {
+                else if (data.reminder === 0) {
                     // console.log(data)
                     response.status(400).json({
                         message: "no valid subscription found this user",
                     });
                 } else {
                     let reminder = new Reminder();
-
-                    console.log({
-                        date_time,
-                        call_time,
-                        dateTime: new Date(date_time),
-                        callTime: new Date(call_time),
-                    });
-
                     reminder.category = category;
                     reminder.date_time = new Date(date_time);
                     reminder.title = title;

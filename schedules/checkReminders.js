@@ -19,7 +19,7 @@ function checkReminders(frequency) {
                     $lt: nextTime,
                 },
             },
-        }).populate("user_id", "name");
+        }).populate("user_id", "name phone");
         const filteredReminders = reminders.reduce((acc, curr) => {
             const hasCallTime = curr.call_times.filter(
                 (callTime) => callTime >= currTime && callTime < nextTime
@@ -30,21 +30,21 @@ function checkReminders(frequency) {
             }
             return acc;
         }, []);
-
+        console.log(reminders);
         for (const reminder of filteredReminders) {
             const reminderCallTimes = reminder.call_times;
+            console.log(reminderCallTimes);
             for (const callTime of reminderCallTimes) {
                 const callTimeDate = new Date(callTime);
                 const timeDiff = callTimeDate.getTime() - currTime.getTime();
                 const hours = Math.floor(timeDiff / (1000 * 60 * 60));
                 const minutes = Math.floor(timeDiff / (1000 * 60)) - hours * 60;
-                console.log({ hours, minutes });
-                const messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${reminder.category} from ${reminder.source} to ${reminder.destination} after ${hours} hours and ${minutes} minutes. The message you wanted is: ${reminder.message}`;
+                const messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${reminder.category} from ${reminder.source} to ${reminder.destination} after ${hours} hours and ${minutes} minutes.Your ${reminder.category} number is ${reminder.number} The message you wanted is: ${reminder.message}`;
 
                 setTimeout(async () => {
                     // todo: make Calls
                     const status = await remindUser({
-                        to: reminder.number,
+                        to: reminder.user_id.phone,
                         message: messageToSay,
                     });
                     console.log({
