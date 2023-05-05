@@ -30,7 +30,8 @@ function checkReminders(frequency) {
             }
             return acc;
         }, []);
-        console.log(reminders);
+        console.log({ reminders });
+        if (!reminders.length) return;
         for (const reminder of filteredReminders) {
             const reminderCallTimes = reminder.call_times;
             console.log(reminderCallTimes);
@@ -40,7 +41,6 @@ function checkReminders(frequency) {
                 const hours = Math.floor(timeDiff / (1000 * 60 * 60));
                 const minutes = Math.floor(timeDiff / (1000 * 60)) - hours * 60;
                 const messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${reminder.category} from ${reminder.source} to ${reminder.destination} after ${hours} hours and ${minutes} minutes.Your ${reminder.category} number is ${reminder.number} The message you wanted is: ${reminder.message}`;
-
                 setTimeout(async () => {
                     // todo: make Calls
                     const status = await remindUser({
