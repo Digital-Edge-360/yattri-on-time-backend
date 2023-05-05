@@ -23,13 +23,6 @@ const FAQCreate_ = async (req, res) => {
 
 const FAQRead_ = async (req, res) => {
     try {
-        const userId = req.user.userId;
-        if (!mongoose.Types.ObjectId.isValid(userId))
-            return res.status(400).json({ message: "invalid object Id" });
-        // const user = await Admin.findById(userId)
-        // if (!user) {
-        //     return res.status(404).json({ message: "user not found" })
-        // }
         const allFaqs = await FAQ.find();
         return res.status(200).json(allFaqs);
     } catch (error) {
