@@ -1,8 +1,14 @@
 const { Reminder } = require("../../models/Reminder");
 const { User } = require("././../../models/User");
-const { dividerTime } = require('../../util/helpers.js');
-const moment = require('moment');
+const { dividerTime, getISTTime } = require("../../util/helpers.js");
+const moment = require("moment");
 const Add_ = (request, response) => {
+    const user_id = request.user.data._id;
+    if (!user_id) {
+        response.status(400).json({
+            message: "user id is required",
+        });
+    }
     let cat = ["train", "bus", "flight", "others"];
     let {
         category,
@@ -13,12 +19,28 @@ const Add_ = (request, response) => {
         source,
         destination,
         message,
-        user_id,
-    frequency } = request.body;
-    let times
+        frequency,
+    } = request.body;
+    let times;
     if (date_time && call_time && frequency) {
-        times = dividerTime(date_time, call_time, frequency)
+        // check if call time & event time are greater than current
+        const eventTime = new Date(date_time);
+        const callTime = new Date(call_time);
+        const currentTime = getISTTime();
+
+        if (callTime < currentTime || eventTime < currentTime) {
+            return response.status(400).json({
+                message:
+                    "Event time and call time should be greater than current time",
+            });
+        }
+        times = dividerTime(date_time, call_time, frequency);
+    } else {
+        return response.status(400).json({
+            message: "Event time, call time and frequency is required",
+        });
     }
+
     if (
         !category ||
         !date_time ||
@@ -49,6 +71,14 @@ const Add_ = (request, response) => {
                     });
                 } else {
                     let reminder = new Reminder();
+
+                    console.log({
+                        date_time,
+                        call_time,
+                        dateTime: new Date(date_time),
+                        callTime: new Date(call_time),
+                    });
+
                     reminder.category = category;
                     reminder.date_time = new Date(date_time);
                     reminder.title = title;

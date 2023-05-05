@@ -65,6 +65,16 @@ const dividerTime = (date_time, call_time, frequency) => {
     return callTimes;
 };
 
+const getISTTime = () => {
+    const currentTime = new Date();
+    const currentOffset = currentTime.getTimezoneOffset();
+    const ISTOffset = 330; // IST offset UTC +5:30
+    const ISTTime = new Date(
+        currentTime.getTime() + (ISTOffset + currentOffset) * 60000
+    );
+    return ISTTime;
+};
+
 const reviewJoi = Joi.object({
     userId: Joi.string().required(),
 
@@ -84,6 +94,7 @@ const UpdatereviewJoi = Joi.object({
 
     isDeleted: Joi.boolean(),
 });
+
 module.exports = {
     phoneValidator,
     formatPhone,
@@ -91,6 +102,7 @@ module.exports = {
     comparePassword,
     hashPassword,
     dividerTime,
+    getISTTime,
     reviewJoi,
     UpdatereviewJoi,
 };
