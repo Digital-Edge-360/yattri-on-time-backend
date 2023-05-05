@@ -240,7 +240,7 @@ const SendOtp_ = (request, response) => {
                     sendVerificationSms(uphone)
                         .then((res) => {
                             response.status(200).json({
-                                message: "user not exist",
+                                message: "user exist",
                                 info: data,
                                 otp: res.otp,
                             });

@@ -36,11 +36,12 @@ function checkReminders(frequency) {
 
         console.log({
             filteredReminders,
+            currTime,
+            nextTime,
         });
         // todo: schedule calls
-        // for (const reminder of filteredReminders) {
-
-        // }
+        for (const reminder of filteredReminders) {
+        }
     });
 }
 
