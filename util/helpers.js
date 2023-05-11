@@ -65,14 +65,24 @@ const dividerTime = (date_time, call_time, frequency) => {
     return callTimes;
 };
 
-const getISTTime = () => {
-    const currentTime = new Date(Date.now());
-
+const getISTTime = (time) => {
+    let currentTime
+    if(time===undefined)
+    currentTime = new Date(Date.now());
+    else currentTime= new Date(time);
     currentTime.setHours(currentTime.getHours() + 5);
     currentTime.setMinutes(currentTime.getMinutes() + 30);
 
     return currentTime;
 };
+
+const getGmtTime = (time) => {
+    const currentTime = new Date(time);
+    console.log({currentTime});
+    currentTime.setHours(currentTime.getHours() - 5);
+    currentTime.setMinutes(currentTime.getMinutes() - 30);
+    return currentTime;
+}
 
 const reviewJoi = Joi.object({
     userId: Joi.string().required(),
@@ -102,6 +112,7 @@ module.exports = {
     hashPassword,
     dividerTime,
     getISTTime,
+    getGmtTime,
     reviewJoi,
     UpdatereviewJoi,
 };

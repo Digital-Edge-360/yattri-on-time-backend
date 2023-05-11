@@ -1,6 +1,6 @@
 const { Reminder } = require("../../models/Reminder");
 const { User } = require("././../../models/User");
-const { dividerTime, getISTTime } = require("../../util/helpers.js");
+const { dividerTime, getISTTime, getGmtTime } = require("../../util/helpers.js");
 const moment = require("moment");
 const Add_ = (request, response) => {
     const user_id = request.user.data._id;
@@ -26,10 +26,11 @@ const Add_ = (request, response) => {
         // check if call time & event time are greater than current
         const eventTime = new Date(date_time);
         const callTime = new Date(call_time);
-        const currentTime = getISTTime();
+        const currentTime = new Date(Date.now())
+        console.log({eventTime, callTime, currentTime});
 
         if (callTime < currentTime || eventTime < currentTime) {
-            return response.status(400).json({
+            return response.status(499).json({
                 message:
                     "Event time and call time should be greater than current time",
             });

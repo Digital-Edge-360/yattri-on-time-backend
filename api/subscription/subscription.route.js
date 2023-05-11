@@ -8,15 +8,8 @@ const {
     Remove_,
 } = require("./subscription.controller");
 const adminOnly = require("../../middleware/adminOnly.middleware");
-router.post("/", validateTocken, adminOnly, Add_);
-router.get("/:id", Find_);
-router.get("/", FindAll_);
-router.patch("/:id", validateTocken, adminOnly, Update_);
-router.delete("/:id", validateTocken, adminOnly, Remove_);
 
-/*To handle all invalid request */
-router.all("*", (request, response) => {
-    response.status(500).json({ status: "failed", message: "invalid request" });
-});
+router.route('/').get(FindAll_).post(validateTocken, adminOnly, Add_);
+router.route('/:id').get(Find_).patch(validateTocken, adminOnly, Update_).delete(validateTocken, adminOnly, Remove_);
 
 module.exports = router;

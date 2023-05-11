@@ -24,6 +24,7 @@ const SubscribeRouter = require("./api/subscribe/subscribe.route");
 const AdminRouter = require("./api/admin/admin.route");
 const FaqRouter = require("./api/faq/faq.route");
 const ReviewRouter = require("./api/review/review.route");
+const RemindRouter= require('./api/remind/remind.route.js');
 
 const connectDB = require("./db/connect.js");
 
@@ -64,17 +65,19 @@ app.use("/api/subscribe", SubscribeRouter);
 app.use("/api/admin", AdminRouter);
 app.use("/api/faq", FaqRouter);
 app.use("/api/review", ReviewRouter);
+app.use("/files/voices", RemindRouter);
+
 app.get("/", (req, res) => {
     res.send("Api is Working!");
 });
 
 app.all("*", (req, res) => {
-    res.send("Sorry, this is an invalid URL.");
+    res.status(404).send("Sorry, this is an invalid URL.");
 });
 
 // Schedules
 const checkReminders = require("./schedules/checkReminders.js");
-checkReminders(59); //checks in every 1 hour
+checkReminders(1); //checks in every 59 minutes.
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

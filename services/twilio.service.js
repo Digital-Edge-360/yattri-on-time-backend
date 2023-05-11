@@ -19,7 +19,7 @@ const sendSMS = async (config) => {
     }
 };
 
-const sendVerificationSms = async (to = "+919609327424") => {
+const sendVerificationSms = async (to) => {
     const otp = Math.ceil(Math.random() * 9000 + 1000);
     const body = `Welcome to Yattri Onn Time, Your Verificarion Code: ${otp}`;
     const status = await sendSMS({
@@ -35,7 +35,10 @@ const sendVerificationSms = async (to = "+919609327424") => {
 
 const generateCallDetails = async (message) => {
     const response = new voiceResponse();
-    response.say(message);
+    response.say({
+        language:'en-IN',
+        voice:'Polly.Raveena'
+    },message);
     const body = response.toString();
     const fName = `voice_${new Date().getTime().toString()}.xml`;
     const dir = path.join(process.cwd(), "data", "voices");

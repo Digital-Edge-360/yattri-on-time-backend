@@ -7,10 +7,10 @@ const { remindUser } = require("../services/twilio.service.js");
 
 function checkReminders(frequency) {
     return cron.schedule(`*/${frequency} * * * *`, async function () {
-        const currTime = getISTTime();
+        const currTime = new Date(Date.now());
         const nextTime = new Date(
-            currTime.getTime() + frequency * 59 * 60 * 1000
-        ); //set time 1 hour
+            currTime.getTime() + frequency * 60 * 1000
+        ); 
 
         const reminders = await Reminder.find({
             call_times: {
@@ -46,11 +46,13 @@ function checkReminders(frequency) {
                     const status = await remindUser({
                         to: reminder.user_id.phone,
                         message: messageToSay,
-                    });
+                    });                    
                     console.log({
                         callStatus: status,
                     });
+            
                 }, timeDiff);
+               
             }
         }
     });

@@ -60,7 +60,9 @@ const Remove_ = (request, response) => {
         .then((data) => {
             if (data == null)
                 response.status(400).json({ message: "invalid id" });
-            else response.status(202).json({ message: "data removed" });
+            else {
+                response.status(202).json({ message: "data removed" });
+            }
         })
         .catch((err) => {
             response.status(400).json({ message: "invalid id" });

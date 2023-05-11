@@ -151,8 +151,8 @@ const Login_ = (request, response) => {
     else if (!phoneValidator(phone))
         response.status(400).json({ message: "invalid phone number" });
     else {
-        let uphone = formatPhone(phone);
-        User.findOne({ phone: uphone })
+        // let uphone = formatPhone(phone);
+        User.findOne({ phone })
             .then((data) => {
                 if (data == null)
                     response.status(404).json({ message: "user not exist" });
@@ -163,7 +163,7 @@ const Login_ = (request, response) => {
                         data.verified = true;
                         data.save();
                     }
-                    let token = jwt.sign({ data }, process.env.JWT_SECRET, {
+                    let token = jwt.sign( {data} , process.env.JWT_SECRET, {
                         expiresIn: "30d",
                     });
                     response
@@ -185,20 +185,20 @@ const Register_ = (request, response) => {
     else if (!phoneValidator(phone))
         response.status(400).json({ message: "invalid phone number" });
     else {
-        let uphone = formatPhone(phone);
-        User.findOne({ phone: uphone })
+        // let uphone = formatPhone(phone);
+        User.findOne({phone})
             .then((data) => {
                 if (data == null) {
-                    let temp = new User();
-                    temp.name = name;
-                    temp.phone = uphone;
-                    temp.verified = true;
-                    temp.status = true;
-                    temp.save();
-                    var token = jwt.sign({ temp }, process.env.JWT_SECRET, {
+                    let data = new User();
+                    data.name = name;
+                    data.phone = phone;
+                    data.verified = true;
+                    data.status = true;
+                    data.save();
+                    var token = jwt.sign({data} , process.env.JWT_SECRET, {
                         expiresIn: "30d",
                     });
-                    response.json({ user: temp, token });
+                    response.json({ user: data, token });
                 } else {
                     var token = jwt.sign(data, process.env.JWT_SECRET, {
                         expiresIn: "30d",
