@@ -1,5 +1,6 @@
 const { User } = require("../../models/User");
 const { phoneValidator, formatPhone } = require("../../util/helpers");
+const {Transaction} = require("../../models/Transaction");
 var jwt = require("jsonwebtoken");
 var fs = require("fs");
 const {
@@ -7,6 +8,7 @@ const {
     callAndSay,
     remindUser,
 } = require("../../services/twilio.service.js");
+const { log } = require("console");
 
 const Add_ = (request, response) => {
     let validExt = ["jpg", "jpeg", "png"];
@@ -220,6 +222,7 @@ const SendOtp_ = (request, response) => {
         response.status(400).json({ message: "invalid phone number" });
     else {
         let uphone = formatPhone(phone);
+        console.log({uphone});
         User.findOne({ phone: uphone })
             .then((data) => {
                 if (data == null) {
@@ -271,6 +274,17 @@ const RemindUser_ = async (req, res) => {
     }
 };
 
+const getTransactions_= async(req, res) => {
+    try {   
+            console.log("kkk", req.params.id)
+            const transactions = await Transaction.find({user_id: req.params.id});
+            res.status(200).json(transactions);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "internal server error" });
+        }
+}
+
 module.exports = {
     Find_,
     FindAll_,
@@ -281,4 +295,5 @@ module.exports = {
     Register_,
     SendOtp_,
     RemindUser_,
+    getTransactions_
 };

@@ -31,6 +31,7 @@ const Add_ = (request, response) => {
                             transaction.amount = subscription.price;
                             transaction.status = 'success';
                             transaction.remarks = 'subscription charge';
+                            transaction.user_id = user.id;
 
                             // Create Subscribe Object 
                             let subscribe = new Subscribe();
