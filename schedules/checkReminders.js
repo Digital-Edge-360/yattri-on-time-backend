@@ -9,7 +9,7 @@ function checkReminders(frequency) {
     return cron.schedule(`*/${frequency} * * * *`, async function () {
         const currTime = new Date(Date.now());
         const nextTime = new Date(
-            currTime.getTime() + frequency * 60 * 1000
+            currTime.getTime() + frequency * 5 * 1000
         ); 
 
         const reminders = await Reminder.find({
