@@ -79,8 +79,8 @@ app.all("*", (req, res) => {
 const checkReminders = require("./schedules/checkReminders.js");
 checkReminders(1); //checks in every 59 minutes.
 
-const deleteReminders = require("./schedules/deleteReminders.js");
-deleteReminders(1);
+// const deleteReminders = require("./schedules/deleteReminders.js");
+// deleteReminders(1);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

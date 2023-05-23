@@ -172,17 +172,25 @@ const Find_ = (request, response) => {
 //FindUser_
 
 const FindUser_ = (request, response) => {
-    Reminder.find({ user_id: request.params.id })
-        .then((data) => {
-            if (data == null)
-                response.status(400).json({ message: "invalid id" });
-            else response.status(200).json(data);
-        })
-        .catch((err) => {
-            response.status(400).json({ message: "invalid id" });
-        });
-};
-
+    Reminder.find({ user_id: request.params.id }).lean()
+      .then((data) => {
+        if (data == null) {
+          response.status(400).json({ message: "invalid id" });
+        } else {
+          for (let i = 0; i < data.length; i++) {
+            data[i].call_times = data[i].call_times.map((elem) => {
+              return new Date(elem).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
+            });
+          }
+          console.log("data", data);
+          response.status(200).json(data);
+        }
+      })
+      .catch((err) => {
+        response.status(400).json({ message: "invalid id" });
+      });
+  };
+  
 const FindAll_ = (request, response) => {
     Reminder.find()
         .populate("user_id", "name phone -_id")
