@@ -21,7 +21,7 @@ const sendSMS = async (config) => {
 
 const sendVerificationSms = async (to) => {
     const otp = Math.ceil(Math.random() * 9000 + 1000);
-    const body = `Welcome to Yattri Onn Time, Your Verificarion Code: ${otp}`;
+    const body = `Welcome to Yatri Onn Time, Your Verificarion Code: ${otp}`;
     const status = await sendSMS({
         to,
         body,
