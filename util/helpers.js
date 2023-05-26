@@ -104,6 +104,15 @@ const UpdatereviewJoi = Joi.object({
     isDeleted: Joi.boolean(),
 });
 
+const convertISOStringToLocal = (isoString) => {
+    
+      const date = new Date(isoString);
+      const localDate = date.toLocaleDateString();
+      const localTime = date.toLocaleTimeString();
+      return { localDate, localTime };
+  };
+  
+
 module.exports = {
     phoneValidator,
     formatPhone,
@@ -115,4 +124,5 @@ module.exports = {
     getGmtTime,
     reviewJoi,
     UpdatereviewJoi,
+    convertISOStringToLocal
 };

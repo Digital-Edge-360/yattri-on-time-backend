@@ -3,7 +3,7 @@ const { validateTocken } = require('../../auth/tokenValidator');
 
 const { Find_, FindAll_, Add_, Update_, Remove_, FindUser_ } = require('./reminder.controller');
 router.get("/:id", validateTocken, Find_);
-router.get("/", validateTocken, FindAll_);
+router.get("/",  FindAll_);
 router.get("/user/:id", validateTocken, FindUser_);
 router.post("/", validateTocken, Add_);
 router.patch("/:id", validateTocken, Update_);

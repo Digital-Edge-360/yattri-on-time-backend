@@ -1,6 +1,6 @@
 const { Reminder } = require("../../models/Reminder");
 const { User } = require("././../../models/User");
-const { dividerTime, getISTTime, getGmtTime } = require("../../util/helpers.js");
+const { dividerTime, getISTTime, getGmtTime, convertISOStringToLocal } = require("../../util/helpers.js");
 const moment = require("moment");
 const Add_ = (request, response) => {
     const user_id = request.user.data._id;
@@ -178,6 +178,8 @@ const FindUser_ = (request, response) => {
           response.status(400).json({ message: "invalid id" });
         } else {
           for (let i = 0; i < data.length; i++) {
+            data[i].call_time=new Date(data[i].call_time).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
+            data[i].date_time=new Date(data[i].date_time).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
             data[i].call_times = data[i].call_times.map((elem) => {
               return new Date(elem).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
             });
@@ -193,11 +195,20 @@ const FindUser_ = (request, response) => {
   
 const FindAll_ = (request, response) => {
     Reminder.find()
-        .populate("user_id", "name phone -_id")
+        .populate("user_id", "name phone -_id").lean()
         .then((data) => {
             if (data.length == 0)
                 response.status(404).json({ message: "no data found" });
-            else response.status(200).json(data);
+            else {
+                for(let i=0; i<data.length; i++){
+
+                    let time=convertISOStringToLocal(data[i].date_time);
+                     data[i].date_time= time;
+                    //  date[i].call_time=convertISOStringToLocal(data[i].call_time);
+                    console.log({data});
+                }
+                response.status(200).json(data);
+            }
         })
         .catch((err) => {
             console.log(err);
