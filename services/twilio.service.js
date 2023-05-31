@@ -59,6 +59,7 @@ const remindUser = async (remind) => {
     // const fName = await generateCallDetails(`Hello aninda `);
     // const fUrl = `${process.env.ORIGIN}/files/voices/${fName}`;
     const fUrl = `${process.env.ORIGIN2}/files/voices/${fName}`;
+    console.log({fUrl, remind});
     try {
         const result = await client.calls.create({
             url: fUrl,

@@ -101,6 +101,11 @@ function checkReminders(frequency) {
         // if (!reminders.length) return;
         for (const reminder of reminders) {
             const reminderCallTimes = reminder.call_times;
+            let date_time=new Date(reminder.date_time).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
+            console.log("check", date_time.split(','));
+            let hour =date_time.split(',')[1].split(':')[0];
+            console.log({hour});
+            console.log({date_time});
             console.log({reminderCallTimes});
             for (const callTime of reminderCallTimes) {
                 console.log("kkkk");
@@ -108,7 +113,8 @@ function checkReminders(frequency) {
                 const timeDiff = callTimeDate.getTime() - currTime.getTime();
                 const hours = Math.floor(timeDiff / (1000 * 60 * 60));
                 const minutes = Math.floor(timeDiff / (1000 * 60)) - hours * 60;
-                const messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${reminder.category} from ${reminder.source} to ${reminder.destination} after ${hours} hours and ${minutes} minutes.Your ${reminder.category} number is ${reminder.number} The message you wanted is: ${reminder.message}`;
+                // const messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${reminder.category} from ${reminder.source} to ${reminder.destination} at ${date_time.split(',')[1].split(':')[0]} hours and ${date_time.split(',')[1].split(':')[1]} minutes. Your ${reminder.category} number is ${reminder.number} The message you wanted is: ${reminder.message}`;
+                const messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${reminder.category} from ${reminder.source} to ${reminder.destination} at ${date_time.split(", ")[1].replaceAll(":"," ")}. Your ${reminder.category} number is ${reminder.number}. The message you wanted is: ${reminder.message}`
                 setTimeout(async () => {
                     // todo: make Calls
                     const status = await remindUser({
