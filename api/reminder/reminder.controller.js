@@ -2,6 +2,7 @@ const { Reminder } = require("../../models/Reminder");
 const { User } = require("././../../models/User");
 const { dividerTime, getISTTime, getGmtTime, convertISOStringToLocal } = require("../../util/helpers.js");
 const moment = require("moment");
+const { Transaction } = require("../../models/Transaction");
 const Add_ = (request, response) => {
     const user_id = request.user.data._id;
     if (!user_id) {
@@ -100,37 +101,17 @@ const Add_ = (request, response) => {
 const Update_ = (request, response) => {
     Reminder.findById(request.params.id)
         .then((data) => {
+
             if (data == null)
                 response.status(400).json({ message: "invalid id" });
             else {
                 let cat = ["train", "bus", "flight", "others"];
                 let {
-                    category,
-                    date_time,
-                    title,
-                    call_time,
                     number,
                     source,
                     destination,
                     message,
-                    user_id,
                 } = request.body;
-                if (category) {
-                    if (!cat.includes(category))
-                        return response
-                            .status(400)
-                            .json({ message: "invalid category" });
-                    data.category = category;
-                }
-                if (date_time) {
-                    data.date_time = new Date(date_time);
-                }
-                if (title) {
-                    data.title = title;
-                }
-                if (call_time) {
-                    data.call_time = new Date(call_time);
-                }
                 if (number) {
                     data.number = number;
                 }
@@ -142,9 +123,6 @@ const Update_ = (request, response) => {
                 }
                 if (message) {
                     data.message = message;
-                }
-                if (user_id) {
-                    data.user_id = user_id;
                 }
                 data.save();
                 response
@@ -237,5 +215,58 @@ const Remove_ = (request, response) => {
             response.status(400).json({ message: "invalid id" });
         });
 };
+ const Add_Single_Reminder=async (request, response) =>{
+    try {
+        let data=request.body;
+        // const eventTime = new Date(date_time);
+        // const callTime = new Date(call_time);
+        // const currentTime = new Date(Date.now());
+        // let reminder = new Reminder();
+        //             reminder.category = category;
+        //             reminder.date_time = new Date(date_time);
+        //             reminder.title = title;
+        //             reminder.call_time = new Date(call_time);
+        //             reminder.call_times = times;
+        //             reminder.number = number;
+        //             reminder.source = source;
+        //             reminder.destination = destination;
+        //             reminder.message = message ? message : null;
+        //             reminder.user_id = user_id;
+        //             reminder.frequency = frequency;
+        let times = dividerTime(data.date_time, data.call_time, data.frequency);
+        let transactionData= {
+            payment_id:data.payment_id,
+            amount:data.amount,
+            user_id: data.user_id,
+            status:data.status,
+            remarks: data.remarks
+        }
+        let remiderData={
+            category:data.category,
+            date_time: new Date(data.date_time),
+            title:data.title,
+            call_time: new Date(data.call_time),
+            call_times:times,
+            number:data.number,
+            source:data.source,
+            destination:data.destination,
+            message:data.message? data.message:null,
+            user_id:data.user_id,
+            frequency:data.frequency
+        }
+        const user_id = request.user.data._id;
+        if (!user_id) {
+            response.status(400).json({
+                message: "user id is required",
+            });
+        }
+        await Reminder.create(remiderData);
+        await Transaction.create(transactionData);
+        return response.status(201).json({message:"sucess"});
+    } catch (error) {
+        console.log(`Error in adding single remider ****${error}`);
+        return response.status(501).json({message:"Internal server Error"});
+    }
+ }
 
-module.exports = { Find_, FindAll_, Add_, Update_, Remove_, FindUser_ };
+module.exports = { Find_, FindAll_, Add_, Update_, Remove_, FindUser_, Add_Single_Reminder };
