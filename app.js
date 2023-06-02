@@ -36,7 +36,10 @@ const app = express();
  * ******************************************************/
 
 // cors
-app.use(cors());
+app.use(cors({
+    origin:'*'
+   }
+));
 // morgan
 app.use(morgan("dev"));
 // host images
