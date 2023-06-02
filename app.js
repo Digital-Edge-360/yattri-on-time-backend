@@ -10,7 +10,21 @@ var cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const morgan = require("morgan");
+const helmet = require('helmet')
 
+const app = express()
+//
+
+app.use(cors());
+  
+  app.use(helmet());
+
+  app.use((req, res, next) => {
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    next();
+  });
+
+  
 /*************************************
  * Exports All The Routers From Api
  *************************************/
@@ -29,17 +43,12 @@ const RemindRouter= require('./api/remind/remind.route.js');
 const connectDB = require("./db/connect.js");
 
 /**Create Object Of Express */
-const app = express();
+
 
 /********************************************************
  * Apply All The Basic Middileware To Handle The Request
  * ******************************************************/
-
 // cors
-app.use(cors({
-    origin:'*'
-   }
-));
 // morgan
 app.use(morgan("dev"));
 // host images
@@ -69,6 +78,9 @@ app.use("/api/admin", AdminRouter);
 app.use("/api/faq", FaqRouter);
 app.use("/api/review", ReviewRouter);
 app.use("/files/voices", RemindRouter);
+
+
+  
 
 app.get("/", (req, res) => {
     res.send("Api is Working!");
