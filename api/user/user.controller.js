@@ -12,12 +12,14 @@ const { log } = require("console");
 
 const Add_ = (request, response) => {
     let validExt = ["jpg", "jpeg", "png"];
-    let { name, phone } = request.body;
+    let { name, phone, email, dob } = request.body;
     let user = new User();
     user.name = name;
     user.phone = formatPhone(phone);
-    if (!name || !phone) {
-        response.status(400).json({ message: "name and phone no required" });
+    user.email = email,
+    user.dob = dob
+    if (!name || !phone || !email) {
+        response.status(400).json({ message: "name, phone no and email required" });
     } else if (!phoneValidator(phone))
         response.status(400).json({ message: "invalid phone number" });
     else if (request.files != null && request.files.image != null) {
