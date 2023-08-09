@@ -6,15 +6,17 @@ const client = require("twilio")(accountSid, authToken);
 const voiceResponse = require("twilio").twiml.VoiceResponse;
 const path = require("path");
 const fs = require("fs/promises");
+const { UserSchema } = require("../models/User.js");
 
 const sendSMS = async (config) => {
-    console.log("hi");
+    console.log("inside sendsms");
     try {
         const result = await client.messages.create({
             to: config.to,
             from: process.env.SENDER_PHONE_NUMBER,
             body: config.body,
         });
+        console.log("parnahsa", result);
         return result;
     } catch (error) {
         throw new Error(error?.message);
@@ -23,6 +25,8 @@ const sendSMS = async (config) => {
 
 const sendVerificationSms = async (to) => {
     const otp = Math.ceil(Math.random() * 9000 + 1000);
+    console.log(otp);
+    UserSchema.methods.otp = otp;
     const body = `Welcome to Yatri Onn Time, Your Verificarion Code: ${otp}`;
     const status = await sendSMS({
         to,
