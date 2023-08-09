@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require("twilio")(accountSid, authToken);
@@ -35,10 +37,13 @@ const sendVerificationSms = async (to) => {
 
 const generateCallDetails = async (message) => {
     const response = new voiceResponse();
-    response.say({
-        language:'en-IN',
-        voice:'Polly.Raveena'
-    },message);
+    response.say(
+        {
+            language: "en-IN",
+            voice: "Polly.Raveena",
+        },
+        message
+    );
     const body = response.toString();
     const fName = `voice_${new Date().getTime().toString()}.xml`;
     const dir = path.join(process.cwd(), "data", "voices");
@@ -59,7 +64,7 @@ const remindUser = async (remind) => {
     // const fName = await generateCallDetails(`Hello aninda `);
     // const fUrl = `${process.env.ORIGIN}/files/voices/${fName}`;
     const fUrl = `${process.env.ORIGIN2}/files/voices/${fName}`;
-    console.log({fUrl, remind});
+    console.log({ fUrl, remind });
     try {
         const result = await client.calls.create({
             url: fUrl,
