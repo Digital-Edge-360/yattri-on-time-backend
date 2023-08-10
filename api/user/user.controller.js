@@ -7,6 +7,7 @@ const {
     sendVerificationSms,
     callAndSay,
     remindUser,
+    checkVerification,
 } = require("../../services/twilio.service.js");
 const { log } = require("console");
 const { response } = require("express");
@@ -149,12 +150,16 @@ const Remove_ = (request, response) => {
         });
 };
 
-const Login_ = (request, response) => {
-    console.log("jhjjjhjh");
-    let { phone, otp_verified } = request.body;
+const Login_ = async (request, response) => {
+    // console.log("jhjjjhjh");
 
-    if (!phone || otp_verified == undefined)
-        response.status(400).json({ message: "phone,otp_verified requied" });
+    let { phone, otp } = request.body;
+
+    const isVerified = await checkVerification({ to: phone, code: otp });
+
+    if (!isVerified) response.status(400).json({ message: "Invalid Otp" });
+    else if (!phone)
+        response.status(400).json({ message: "Phone Number required" });
     else if (!phoneValidator(phone))
         response.status(400).json({ message: "invalid phone number" });
     else {
@@ -186,7 +191,6 @@ const Login_ = (request, response) => {
 };
 
 const Register_ = (request, response) => {
-    console.log("====>");
     let { phone, name } = request.body;
     console.log(phone, name);
     if (!phone || !name)
@@ -269,62 +273,50 @@ const SendOtp_ = (request, response) => {
     }
 };
 
+// const verifyOTP = async (phone, otp) => {
+//     try {
+//         const verificationCheck = await client.verify
+//             .services(process.env.TWILIO_VERIFY_SERVICE_SID)
+//             .verificationChecks.create({
+//                 to: phone,
+//                 code: otp,
+//             });
+
+//         response
+//             .status(200)
+//             .json({ message: verificationCheck.status === "approved" });
+//     } catch (error) {
+//         console.error(`Error verifying OTP: ${error.message}`);
+//         throw new Error(`Error verifying OTP: ${error.message}`);
+//     }
+// };
+
 // const verifyOtp_ = async (request, response) => {
 //     let { otp, phone } = request.body;
 
-//     if (!otp || !phone) response.status(400).json({ message: "Otp required" });
+//     if (!otp || !phone) {
+//         return response
+//             .status(400)
+//             .json({ message: "OTP and phone are required" });
+//     }
 
-//     User.findOne({ phone }).then((data) => {
-//         console.log(data);
-//     });
-
-//     response.status(500).json({ message: "return" });
+//     try {
+//         const isOTPValid = await verifyOTP(phone, otp);
+//         if (isOTPValid) {
+//             User.findOne({ phone }).then((data) => {
+//                 console.log(data);
+//                 response
+//                     .status(200)
+//                     .json({ message: "OTP verified successfully", user: data });
+//             });
+//         } else {
+//             response.status(400).json({ message: "Invalid OTP" });
+//         }
+//     } catch (error) {
+//         console.error(error);
+//         response.status(500).json({ message: "Internal server error" });
+//     }
 // };
-
-const verifyOTP = async (phone, otp) => {
-    try {
-        const verificationCheck = await client.verify
-            .services(process.env.TWILIO_VERIFY_SERVICE_SID)
-            .verificationChecks.create({
-                to: phone,
-                code: otp,
-            });
-
-        response
-            .status(200)
-            .json({ message: verificationCheck.status === "approved" });
-    } catch (error) {
-        console.error(`Error verifying OTP: ${error.message}`);
-        throw new Error(`Error verifying OTP: ${error.message}`);
-    }
-};
-
-const verifyOtp_ = async (request, response) => {
-    let { otp, phone } = request.body;
-
-    if (!otp || !phone) {
-        return response
-            .status(400)
-            .json({ message: "OTP and phone are required" });
-    }
-
-    try {
-        const isOTPValid = await verifyOTP(phone, otp);
-        if (isOTPValid) {
-            User.findOne({ phone }).then((data) => {
-                console.log(data);
-                response
-                    .status(200)
-                    .json({ message: "OTP verified successfully", user: data });
-            });
-        } else {
-            response.status(400).json({ message: "Invalid OTP" });
-        }
-    } catch (error) {
-        console.error(error);
-        response.status(500).json({ message: "Internal server error" });
-    }
-};
 
 const RemindUser_ = async (req, res) => {
     try {
@@ -361,5 +353,4 @@ module.exports = {
     SendOtp_,
     RemindUser_,
     getTransactions_,
-    verifyOtp_,
 };

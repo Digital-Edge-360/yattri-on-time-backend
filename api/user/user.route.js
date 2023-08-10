@@ -23,7 +23,6 @@ router.delete("/:id", validateTocken, Remove_);
 router.post("/login", Login_);
 router.post("/register", Register_);
 router.post("/otp", SendOtp_);
-router.post("/verifyotp", verifyOtp_);
 
 router.get("/transactions/:id", validateTocken, getTransactions_);
 
