@@ -78,10 +78,11 @@ const checkVerification = async (config) => {
 };
 
 const sendVerificationSms = async (to) => {
-    const otp = Math.ceil(Math.random() * 9000 + 1000);
-    console.log(otp);
+    //Otp is now being generated autonatically by twilio service
+    // const otp = Math.ceil(Math.random() * 9000 + 1000);
+    // console.log(otp);
 
-    const body = `Welcome to Yatri Onn Time, Your Verificarion Code: ${otp}`;
+    const body = `Welcome to Yatri Onn Time, Your Verificarion Code:`;
     const status = await sendSMS({
         to,
         body,
@@ -89,7 +90,6 @@ const sendVerificationSms = async (to) => {
     console.log(status);
     return {
         status,
-        otp,
     };
 };
 
