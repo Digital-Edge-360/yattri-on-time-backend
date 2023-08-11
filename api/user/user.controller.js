@@ -192,7 +192,7 @@ const Login_ = async (request, response) => {
 
 const Register_ = (request, response) => {
     let { phone, name } = request.body;
-    console.log(phone, name);
+    // console.log(phone, name);
     if (!phone || !name)
         response.status(400).json({ message: "phone,name requied" });
     else if (!phoneValidator(phone))
@@ -211,6 +211,7 @@ const Register_ = (request, response) => {
                     var token = jwt.sign({ data }, process.env.JWT_SECRET, {
                         expiresIn: "30d",
                     });
+                    console.log(data)
                     response.json({ user: data, token });
                 } else {
                     var token = jwt.sign(data, process.env.JWT_SECRET, {

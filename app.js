@@ -77,7 +77,8 @@ app.use("/api/subscribe", SubscribeRouter);
 app.use("/api/admin", AdminRouter);
 app.use("/api/faq", FaqRouter);
 app.use("/api/review", ReviewRouter);
-app.use("/files/voices", RemindRouter);
+// app.use("/files/voices", RemindRouter);
+app.use("/api/remind" , RemindRouter);
 
 
   
@@ -98,6 +99,7 @@ checkReminders(1); //checks in every 59 minutes.
 // deleteReminders(1);
 
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
     connectDB(process.env.MONGO_DB_URL);
     console.log(`Api Running on port ${PORT}`);

@@ -1,7 +1,12 @@
 const router = require("express").Router();
-const { SendVoice } = require('./remind.controller.js');
+const { SendVoice,sendReminder } = require('./remind.controller.js');
 
-router.post("/:id", SendVoice);
+
+router.post("/files/voices:id", SendVoice);
+
+// This ID should be remainder ID 
+router.post("/" ,sendReminder);
+
 
 /*To handle all invalid request */
 router.all("*", (request, response) => {
