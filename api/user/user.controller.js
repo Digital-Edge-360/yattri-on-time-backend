@@ -1,14 +1,16 @@
 const { User } = require("../../models/User");
 const { phoneValidator, formatPhone } = require("../../util/helpers");
-const {Transaction} = require("../../models/Transaction");
+const { Transaction } = require("../../models/Transaction");
 var jwt = require("jsonwebtoken");
 var fs = require("fs");
 const {
     sendVerificationSms,
     callAndSay,
     remindUser,
+    checkVerification,
 } = require("../../services/twilio.service.js");
 const { log } = require("console");
+const { response } = require("express");
 
 const Add_ = (request, response) => {
     let validExt = ["jpg", "jpeg", "png"];
@@ -16,10 +18,11 @@ const Add_ = (request, response) => {
     let user = new User();
     user.name = name;
     user.phone = formatPhone(phone);
-    user.email = email,
-    user.dob = dob
+    (user.email = email), (user.dob = dob);
     if (!name || !phone || !email) {
-        response.status(400).json({ message: "name, phone no and email required" });
+        response
+            .status(400)
+            .json({ message: "name, phone no and email required" });
     } else if (!phoneValidator(phone))
         response.status(400).json({ message: "invalid phone number" });
     else if (request.files != null && request.files.image != null) {
@@ -147,15 +150,20 @@ const Remove_ = (request, response) => {
         });
 };
 
-const Login_ = (request, response) => {
-    let { phone, otp_verified } = request.body;
+const Login_ = async (request, response) => {
+    // console.log("jhjjjhjh");
 
-    if (!phone || otp_verified == undefined)
-        response.status(400).json({ message: "phone,otp_verified requied" });
+    let { phone, otp } = request.body;
+
+    const isVerified = await checkVerification({ to: phone, code: otp });
+
+    if (!isVerified) response.status(400).json({ message: "Invalid Otp" });
+    else if (!phone)
+        response.status(400).json({ message: "Phone Number required" });
     else if (!phoneValidator(phone))
         response.status(400).json({ message: "invalid phone number" });
     else {
-        // let uphone = formatPhone(phone);
+        let uphone = formatPhone(phone);
         User.findOne({ phone })
             .then((data) => {
                 if (data == null)
@@ -167,7 +175,7 @@ const Login_ = (request, response) => {
                         data.verified = true;
                         data.save();
                     }
-                    let token = jwt.sign( {data} , process.env.JWT_SECRET, {
+                    let token = jwt.sign({ data }, process.env.JWT_SECRET, {
                         expiresIn: "30d",
                     });
                     response
@@ -184,13 +192,14 @@ const Login_ = (request, response) => {
 
 const Register_ = (request, response) => {
     let { phone, name } = request.body;
+    console.log(phone, name);
     if (!phone || !name)
         response.status(400).json({ message: "phone,name requied" });
     else if (!phoneValidator(phone))
         response.status(400).json({ message: "invalid phone number" });
     else {
         // let uphone = formatPhone(phone);
-        User.findOne({phone})
+        User.findOne({ phone })
             .then((data) => {
                 if (data == null) {
                     let data = new User();
@@ -199,7 +208,7 @@ const Register_ = (request, response) => {
                     data.verified = true;
                     data.status = true;
                     data.save();
-                    var token = jwt.sign({data} , process.env.JWT_SECRET, {
+                    var token = jwt.sign({ data }, process.env.JWT_SECRET, {
                         expiresIn: "30d",
                     });
                     response.json({ user: data, token });
@@ -219,12 +228,13 @@ const Register_ = (request, response) => {
 
 const SendOtp_ = (request, response) => {
     let { phone } = request.body;
+    console.log(phone);
     if (!phone) response.status(400).json({ message: "phone requied" });
     else if (!phoneValidator(phone))
         response.status(400).json({ message: "invalid phone number" });
     else {
         let uphone = formatPhone(phone);
-        console.log({uphone});
+        console.log({ uphone });
         User.findOne({ phone: uphone })
             .then((data) => {
                 if (data == null) {
@@ -263,6 +273,51 @@ const SendOtp_ = (request, response) => {
     }
 };
 
+// const verifyOTP = async (phone, otp) => {
+//     try {
+//         const verificationCheck = await client.verify
+//             .services(process.env.TWILIO_VERIFY_SERVICE_SID)
+//             .verificationChecks.create({
+//                 to: phone,
+//                 code: otp,
+//             });
+
+//         response
+//             .status(200)
+//             .json({ message: verificationCheck.status === "approved" });
+//     } catch (error) {
+//         console.error(`Error verifying OTP: ${error.message}`);
+//         throw new Error(`Error verifying OTP: ${error.message}`);
+//     }
+// };
+
+// const verifyOtp_ = async (request, response) => {
+//     let { otp, phone } = request.body;
+
+//     if (!otp || !phone) {
+//         return response
+//             .status(400)
+//             .json({ message: "OTP and phone are required" });
+//     }
+
+//     try {
+//         const isOTPValid = await verifyOTP(phone, otp);
+//         if (isOTPValid) {
+//             User.findOne({ phone }).then((data) => {
+//                 console.log(data);
+//                 response
+//                     .status(200)
+//                     .json({ message: "OTP verified successfully", user: data });
+//             });
+//         } else {
+//             response.status(400).json({ message: "Invalid OTP" });
+//         }
+//     } catch (error) {
+//         console.error(error);
+//         response.status(500).json({ message: "Internal server error" });
+//     }
+// };
+
 const RemindUser_ = async (req, res) => {
     try {
         const { to, message } = req.body;
@@ -276,16 +331,16 @@ const RemindUser_ = async (req, res) => {
     }
 };
 
-const getTransactions_= async(req, res) => {
-    try {   
-            console.log("kkk", req.params.id)
-            const transactions = await Transaction.find({user_id: req.params.id});
-            res.status(200).json(transactions);
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({ message: "internal server error" });
-        }
-}
+const getTransactions_ = async (req, res) => {
+    try {
+        console.log("kkk", req.params.id);
+        const transactions = await Transaction.find({ user_id: req.params.id });
+        res.status(200).json(transactions);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "internal server error" });
+    }
+};
 
 module.exports = {
     Find_,
@@ -297,5 +352,5 @@ module.exports = {
     Register_,
     SendOtp_,
     RemindUser_,
-    getTransactions_
+    getTransactions_,
 };

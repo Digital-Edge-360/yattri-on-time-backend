@@ -2,28 +2,87 @@ require("dotenv").config();
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require("twilio")(accountSid, authToken);
+const client = require("twilio")(accountSid, authToken, { lazyLoading: true });
 const voiceResponse = require("twilio").twiml.VoiceResponse;
 const path = require("path");
 const fs = require("fs/promises");
+const { request } = require("http");
+const { response } = require("express");
+
+// client.verify.v2.services
+//     .create({
+//         friendlyName: "Verify otp",
+//         codeLength: 4,
+//         lookupEnabled: true,
+//         psd2Enabled: true,
+//     })
+//     .then((service) => console.log("=====", service.sid));
+
+// client.verify.v2
+//     .services("VA3edd25bf00c129b2ec495e2bf6368181")
+//     .fetch()
+//     .then((service) => console.log(service.sid));
 
 const sendSMS = async (config) => {
-    console.log("hi");
+    console.log("inside sendsms");
+    // client.verify.v2
+    //     .services("varify otp")
+
+    //     .verifications.create({
+    //         to: config.to,
+    //         from: process.env.SENDER_PHONE_NUMBER,
+    //         body: config.body,
+    //         channel: "sms",
+    //     })
+    //     .then((verification) => console.log(verification.status));
     try {
-        const result = await client.messages.create({
-            to: config.to,
-            from: process.env.SENDER_PHONE_NUMBER,
-            body: config.body,
-        });
-        return result;
-    } catch (error) {
-        throw new Error(error?.message);
+        const otpResponse = await client.verify
+            .services(process.env.TWILIO_SERVICE_SID)
+            .verifications.create({
+                to: config.to,
+                channel: "sms",
+            });
+        return otpResponse;
+    } catch (e) {
+        console.log(e.message);
+    }
+    // try {
+
+    //     const result = await client.messages.create({
+    //         to: config.to,
+    //         from: process.env.SENDER_PHONE_NUMBER,
+    //         body: config.body,
+    //     });
+
+    //     console.log("parnahsa", result);
+    //     return result;
+    // } catch (error) {
+    //     throw new Error(error?.message);
+    // }
+};
+
+const checkVerification = async (config) => {
+    try {
+        const verifyResponse = await client.verify
+            .services(process.env.TWILIO_SERVICE_SID)
+            .verificationChecks.create({
+                to: config.to,
+                code: config.code,
+            });
+
+        // console.log(verifyResponse);
+        return verifyResponse.status === "approved" ? true : false;
+    } catch (e) {
+        console.log(e.message);
     }
 };
 
 const sendVerificationSms = async (to) => {
-    const otp = Math.ceil(Math.random() * 9000 + 1000);
-    const body = `Welcome to Yatri Onn Time, Your Verificarion Code: ${otp}`;
+    //Otp is now being generated autonatically by twilio service
+    // const otp = Math.ceil(Math.random() * 9000 + 1000);
+    // console.log(otp);
+
+    const body = `Welcome to Yatri Onn Time, Your Verificarion Code:`;
     const status = await sendSMS({
         to,
         body,
@@ -31,7 +90,6 @@ const sendVerificationSms = async (to) => {
     console.log(status);
     return {
         status,
-        otp,
     };
 };
 
@@ -84,4 +142,5 @@ const remindUser = async (remind) => {
 module.exports = {
     sendVerificationSms,
     remindUser,
+    checkVerification,
 };

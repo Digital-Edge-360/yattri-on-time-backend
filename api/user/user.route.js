@@ -10,7 +10,8 @@ const {
     Register_,
     SendOtp_,
     RemindUser_,
-    getTransactions_
+    getTransactions_,
+    verifyOtp_,
 } = require("./user.controller");
 
 router.post("/remind", RemindUser_);
@@ -22,6 +23,7 @@ router.delete("/:id", validateTocken, Remove_);
 router.post("/login", Login_);
 router.post("/register", Register_);
 router.post("/otp", SendOtp_);
+
 router.get("/transactions/:id", validateTocken, getTransactions_);
 
 /*To handle all invalid request */
