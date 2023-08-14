@@ -3,6 +3,7 @@ const { User } = require("././../../models/User");
 const { dividerTime, getISTTime, getGmtTime, convertISOStringToLocal } = require("../../util/helpers.js");
 const moment = require("moment");
 const { Transaction } = require("../../models/Transaction");
+const { date } = require("joi");
 const Add_ = (request, response) => {
     const user_id = request.user.data._id;
     if (!user_id) {
@@ -180,11 +181,15 @@ const FindAll_ = (request, response) => {
             else {
                 for(let i=0; i<data.length; i++){
 
-                    let time=convertISOStringToLocal(data[i].date_time);
-                     data[i].date_time= time;
+                    // let time=convertISOStringToLocal(data[i].date_time);
+                    //  data[i].date_time= time;
                     //  date[i].call_time=convertISOStringToLocal(data[i].call_time);
-                    console.log({data});
+                    // data[i].date_time= time.localDate + " " + time.localTime;
+                    
+                    // console.log(time);
                 }
+                // console.log(data);
+                console.log("====================",data);
                 response.status(200).json(data);
             }
         })
