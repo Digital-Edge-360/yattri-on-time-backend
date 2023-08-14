@@ -17,6 +17,7 @@ const {
 
 router.post("/fetch", fetchUser);
 router.post("/remind", RemindUser_);
+
 router.get("/:id", validateTocken, Find_);
 router.get("/", validateTocken, FindAll_);
 
