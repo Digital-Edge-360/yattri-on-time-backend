@@ -11,12 +11,15 @@ const {
     SendOtp_,
     RemindUser_,
     getTransactions_,
+    fetchUser,
     verifyOtp_,
 } = require("./user.controller");
 
+router.post("/fetch", fetchUser);
 router.post("/remind", RemindUser_);
 router.get("/:id", validateTocken, Find_);
 router.get("/", validateTocken, FindAll_);
+
 router.post("/", Add_);
 router.patch("/:id", Update_);
 router.delete("/:id", validateTocken, Remove_);
@@ -28,6 +31,7 @@ router.get("/transactions/:id", validateTocken, getTransactions_);
 
 /*To handle all invalid request */
 router.all("*", validateTocken, (request, response) => {
+    console.log("hello hey");
     response.status(500).json({ status: "failed", message: "invalid request" });
 });
 

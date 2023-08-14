@@ -10,25 +10,25 @@ var cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const morgan = require("morgan");
-const helmet = require('helmet')
+const helmet = require("helmet");
 
-const app = express()
+const app = express();
 //
 
 app.use(cors());
-  
-  app.use(helmet());
 
-  app.use((req, res, next) => {
+app.use(helmet());
+
+app.use((req, res, next) => {
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
     next();
-  });
+});
 
-  
 /*************************************
  * Exports All The Routers From Api
  *************************************/
 const UserRouter = require("./api/user/user.route");
+
 const AdvertisementRouter = require("./api/advertise/advertise.route");
 const ContactRouter = require("./api/contact/contact.route");
 const ReminderRouter = require("./api/reminder/reminder.route");
@@ -38,12 +38,11 @@ const SubscribeRouter = require("./api/subscribe/subscribe.route");
 const AdminRouter = require("./api/admin/admin.route");
 const FaqRouter = require("./api/faq/faq.route");
 const ReviewRouter = require("./api/review/review.route");
-const RemindRouter= require('./api/remind/remind.route.js');
+const RemindRouter = require("./api/remind/remind.route.js");
 
 const connectDB = require("./db/connect.js");
 
 /**Create Object Of Express */
-
 
 /********************************************************
  * Apply All The Basic Middileware To Handle The Request
@@ -78,10 +77,7 @@ app.use("/api/admin", AdminRouter);
 app.use("/api/faq", FaqRouter);
 app.use("/api/review", ReviewRouter);
 // app.use("/files/voices", RemindRouter);
-app.use("/api/remind" , RemindRouter);
-
-
-  
+app.use("/api/remind", RemindRouter);
 
 app.get("/", (req, res) => {
     res.send("Api is Working!");
