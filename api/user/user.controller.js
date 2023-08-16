@@ -344,6 +344,7 @@ const getTransactions_ = async (req, res) => {
     }
 };
 
+//fetching all details from user//
 const fetchUser = async (request, response) => {
     try {
         const users = await User.findOne({ _id: request.body.id });
