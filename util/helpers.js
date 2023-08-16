@@ -120,7 +120,7 @@ const EncryptCcavenueRequest = (payload) => {
   // parameter payload should be in string/stringify
   let key = process.env.WORKING_KEY; // your working_key provided by bank
 
-  const method = "aes-256-gcm";
+  const method = "aes-256-gcm"; 
   const initVector = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(method, key, initVector);
 
