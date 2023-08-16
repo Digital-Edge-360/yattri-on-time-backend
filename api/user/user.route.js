@@ -12,7 +12,7 @@ const {
     RemindUser_,
     getTransactions_,
     fetchUser,
-    verifyOtp_,
+
 } = require("./user.controller");
 
 router.post("/fetch", fetchUser);

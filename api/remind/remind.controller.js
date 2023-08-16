@@ -5,6 +5,7 @@ const { User } = require("../../models/User");
 const { Reminder } = require("../../models/Reminder");
 
 const sendReminder = async (req, res) => {
+
     try {
         const { remainderId } = req.body;
 
@@ -40,12 +41,15 @@ const sendReminder = async (req, res) => {
     }
 };
 
+
+
 const SendVoice = async (req, res) => {
-    const voiceFile = req.params.id;
-    const fPath = path.join(process.cwd(), "data", "voices", voiceFile);
-    const fContent = await fs.readFile(fPath, "utf8");
-    await fs.unlink(fPath);
-    res.status(200).header({ "Content-Type": "text/xml" }).send(fContent);
+  const voiceFile = req.params.id;
+  const fPath = path.join(process.cwd(), "data", "voices", voiceFile);
+  const fContent = await fs.readFile(fPath, "utf8");
+  await fs.unlink(fPath);
+  res.status(200).header({ "Content-Type": "text/xml" }).send(fContent);
+
 };
 
 module.exports = { SendVoice, sendReminder };

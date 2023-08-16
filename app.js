@@ -12,16 +12,42 @@ const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
 
+
 const app = express();
-//
+
+
 
 app.use(cors());
 
 app.use(helmet());
 
+
 app.use((req, res, next) => {
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
     next();
+})
+// Setting content security policy to connect with ccAvenue
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+                              //Inline Script with this nonce will be executed only
+      scriptSrc: ["'self'" , "'nonce-d6b1f0544e8fe8c38d66017d6d0079d5'"],
+      formAction: [
+        "'self'",
+        "https://test.ccavenue.com",
+        "	https://secure.ccavenue.com",
+      ],
+    },
+  })
+);
+
+
+
+app.use((req, res, next) => {
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  next();
+
 });
 
 /*************************************
@@ -38,7 +64,9 @@ const SubscribeRouter = require("./api/subscribe/subscribe.route");
 const AdminRouter = require("./api/admin/admin.route");
 const FaqRouter = require("./api/faq/faq.route");
 const ReviewRouter = require("./api/review/review.route");
-const RemindRouter = require("./api/remind/remind.route.js");
+const RemindRouter = require("./api/remind/remind.route");
+const PaymentRouter = require("./api/payment/payment.route");
+
 
 const connectDB = require("./db/connect.js");
 
@@ -63,6 +91,11 @@ app.use(cookieParser());
 //To Serve All The Static Files From Data Folder
 app.use("/files", express.static(path.join(__dirname, "data")));
 
+// Setting views
+app.use(express.static("public"));
+app.set("views", __dirname + "/public");
+app.engine("html", require("ejs").renderFile);
+
 /****************************
  * Define All The Api Routes
  ****************************/
@@ -71,7 +104,11 @@ app.use("/api/advertisement", AdvertisementRouter);
 app.use("/api/contact", ContactRouter);
 app.use("/api/reminder", ReminderRouter);
 app.use("/api/subscription", SubscriptionRouter);
-app.use("/api/payment", TransactionRouter);
+
+// separating Transaction logic from payment
+//app.use("/api/payment", TransactionRouter);
+app.use("/api/transaction", TransactionRouter);
+
 app.use("/api/subscribe", SubscribeRouter);
 app.use("/api/admin", AdminRouter);
 app.use("/api/faq", FaqRouter);
@@ -79,12 +116,23 @@ app.use("/api/review", ReviewRouter);
 // app.use("/files/voices", RemindRouter);
 app.use("/api/remind", RemindRouter);
 
+app.use("/api/payment", PaymentRouter);
+
+
 app.get("/", (req, res) => {
-    res.send("Api is Working!");
+  res.send("Api is Working!");
+});
+
+
+// Rendering this temporarily to request ccAvenue server
+app.get("/paymentForm", function (req, res) {
+  res.render("dataFrom.html",{
+    port:process.env.PORT
+  });
 });
 
 app.all("*", (req, res) => {
-    res.status(404).send("Sorry, this is an invalid URL.");
+  res.status(404).send("Sorry, this is an invalid URL.");
 });
 
 // Schedules
@@ -96,7 +144,13 @@ checkReminders(1); //checks in every 59 minutes.
 
 const PORT = process.env.PORT || 5000;
 
+// const encrypted = EncryptCcavenueRequest("Hello World");
+
+// console.log(encrypted);
+
+// DecryptCcavenueResponse(encrypted);
+
 app.listen(PORT, () => {
-    connectDB(process.env.MONGO_DB_URL);
-    console.log(`Api Running on port ${PORT}`);
+  connectDB(process.env.MONGO_DB_URL);
+  console.log(`Api Running on port ${PORT}`);
 });
