@@ -11,7 +11,6 @@ const {
     SendOtp_,
     RemindUser_,
     getTransactions_,
-    verifyOtp_,
 } = require("./user.controller");
 
 router.post("/remind", RemindUser_);
