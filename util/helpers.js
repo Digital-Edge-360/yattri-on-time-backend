@@ -132,7 +132,7 @@ const EncryptCcavenueRequest = (payload) => {
 
 // For decryption of response for API calls the request sending to the CCAvenue
 const DecryptCcavenueResponse = (encResp) => {
-  // parameter encResp should be in string
+  // parameter encResp should be in string sent from the the response handeler
   let key = process.env.WORKING_KEY;
   const method = "aes-256-gcm";
   const encryptedTextBuffer = Buffer.from(encResp, "hex");

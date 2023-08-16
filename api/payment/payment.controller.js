@@ -15,7 +15,9 @@ const CcavRequestHandler = (request, response) => {
   });
 
   const encryptionResponseData = EncryptCcavenueRequest(stringify_payload);
-  response.render("./payment_request.html", {
+  
+  // CCAvenue accept request only in form of HTML Forms so we are rendering this form
+  response.render("./ccav_payment_request.html", {
     encryptedData: encryptionResponseData,
     access_code: process.env.ACCESS_CODE,
   

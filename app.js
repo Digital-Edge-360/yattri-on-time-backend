@@ -111,6 +111,8 @@ app.get("/", (req, res) => {
   res.send("Api is Working!");
 });
 
+
+// Rendering this temporarily to request ccAvenue server
 app.get("/paymentForm", function (req, res) {
   res.render("dataFrom.html",{
     port:process.env.PORT
