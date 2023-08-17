@@ -11,6 +11,7 @@ const {
 } = require("../../services/twilio.service.js");
 const { log } = require("console");
 const { response } = require("express");
+const { request } = require("http");
 
 const Add_ = (request, response) => {
     let validExt = ["jpg", "jpeg", "png"];
@@ -156,7 +157,7 @@ const Login_ = async (request, response) => {
     let { phone, otp } = request.body;
 
     const isVerified = await checkVerification({ to: phone, code: otp });
-
+    console.log(isVerified);
     if (!isVerified) response.status(400).json({ message: "Invalid Otp" });
     else if (!phone)
         response.status(400).json({ message: "Phone Number required" });
@@ -192,7 +193,7 @@ const Login_ = async (request, response) => {
 
 const Register_ = (request, response) => {
     let { phone, name } = request.body;
-    console.log(phone, name);
+    // console.log(phone, name);
     if (!phone || !name)
         response.status(400).json({ message: "phone,name requied" });
     else if (!phoneValidator(phone))
@@ -211,6 +212,7 @@ const Register_ = (request, response) => {
                     var token = jwt.sign({ data }, process.env.JWT_SECRET, {
                         expiresIn: "30d",
                     });
+                    console.log(data);
                     response.json({ user: data, token });
                 } else {
                     var token = jwt.sign(data, process.env.JWT_SECRET, {
@@ -354,6 +356,23 @@ const getTransactions_ = async (req, res) => {
     }
 };
 
+//fetching all details from user//
+const fetchUser = async (request, response) => {
+    try {
+        const users = await User.findOne({ _id: request.body.id });
+
+        if (!users) {
+            console.log(users);
+            return response.status(404).json({ message: "No users found" });
+        }
+
+        response.status(200).json(users);
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ message: "Internal server error" });
+    }
+};
+
 module.exports = {
     Find_,
     FindAll_,
@@ -365,4 +384,5 @@ module.exports = {
     SendOtp_,
     RemindUser_,
     getTransactions_,
+    fetchUser,
 };

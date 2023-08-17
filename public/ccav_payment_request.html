@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment</title>
+  </head>
+  <body style="height: 100vh; display: flex; align-items: center; justify-content: center;">
+
+  please wait, loading payment page...
+
+ <form id="nonseamless" method="post" name="redirect" action="https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction"/>
+
+ <input type="hidden" id="encRequest" name="encRequest" value="<%= encryptedData %>">
+
+<input type="hidden" name="access_code" id="access_code" value="<%= access_code %>">
+
+<!-- nonce with this value will only work -->
+<script nonce="d6b1f0544e8fe8c38d66017d6d0079d5">
+
+   
+        document.redirect.submit();
+    
+  
+
+</script>
+</form>
+
+  </body>
+</html>

@@ -1,6 +1,11 @@
 const { Reminder } = require("../../models/Reminder");
 const { User } = require("././../../models/User");
-const { dividerTime, getISTTime, getGmtTime, convertISOStringToLocal } = require("../../util/helpers.js");
+const {
+    dividerTime,
+    getISTTime,
+    getGmtTime,
+    convertISOStringToLocal,
+} = require("../../util/helpers.js");
 const moment = require("moment");
 const { Transaction } = require("../../models/Transaction");
 const { date } = require("joi");
@@ -28,8 +33,8 @@ const Add_ = (request, response) => {
         // check if call time & event time are greater than current
         const eventTime = new Date(date_time);
         const callTime = new Date(call_time);
-        const currentTime = new Date(Date.now())
-        console.log({eventTime, callTime, currentTime});
+        const currentTime = new Date(Date.now());
+        console.log({ eventTime, callTime, currentTime });
 
         if (callTime < currentTime || eventTime < currentTime) {
             return response.status(499).json({
@@ -102,17 +107,11 @@ const Add_ = (request, response) => {
 const Update_ = (request, response) => {
     Reminder.findById(request.params.id)
         .then((data) => {
-
             if (data == null)
                 response.status(400).json({ message: "invalid id" });
             else {
                 let cat = ["train", "bus", "flight", "others"];
-                let {
-                    number,
-                    source,
-                    destination,
-                    message,
-                } = request.body;
+                let { number, source, destination, message } = request.body;
                 if (number) {
                     data.number = number;
                 }
@@ -151,30 +150,38 @@ const Find_ = (request, response) => {
 //FindUser_
 
 const FindUser_ = (request, response) => {
-    Reminder.find({ user_id: request.params.id }).lean()
-      .then((data) => {
-        if (data == null) {
-          response.status(400).json({ message: "invalid id" });
-        } else {
-          for (let i = 0; i < data.length; i++) {
-            data[i].call_time=new Date(data[i].call_time).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
-            data[i].date_time=new Date(data[i].date_time).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
-            data[i].call_times = data[i].call_times.map((elem) => {
-              return new Date(elem).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
-            });
-          }
-          console.log("data", data);
-          response.status(200).json(data);
-        }
-      })
-      .catch((err) => {
-        response.status(400).json({ message: "invalid id" });
-      });
-  };
-  
+    Reminder.find({ user_id: request.params.id })
+        .lean()
+        .then((data) => {
+            if (data == null) {
+                response.status(400).json({ message: "invalid id" });
+            } else {
+                for (let i = 0; i < data.length; i++) {
+                    data[i].call_time = new Date(
+                        data[i].call_time
+                    ).toLocaleString(undefined, { timeZone: "Asia/Kolkata" });
+                    data[i].date_time = new Date(
+                        data[i].date_time
+                    ).toLocaleString(undefined, { timeZone: "Asia/Kolkata" });
+                    data[i].call_times = data[i].call_times.map((elem) => {
+                        return new Date(elem).toLocaleString(undefined, {
+                            timeZone: "Asia/Kolkata",
+                        });
+                    });
+                }
+                console.log("data", data);
+                response.status(200).json(data);
+            }
+        })
+        .catch((err) => {
+            response.status(400).json({ message: "invalid id" });
+        });
+};
+
 const FindAll_ = (request, response) => {
     Reminder.find()
-        .populate("user_id", "name phone -_id").lean()
+        .populate("user_id", "name phone -_id")
+        .lean()
         .then((data) => {
             if (data.length == 0)
                 response.status(404).json({ message: "no data found" });
@@ -187,6 +194,7 @@ const FindAll_ = (request, response) => {
                     // data[i].date_time= time.localDate + " " + time.localTime;
                     
                     // console.log(time);
+
                 }
                 // console.log(data);
                 console.log("====================",data);
@@ -220,9 +228,9 @@ const Remove_ = (request, response) => {
             response.status(400).json({ message: "invalid id" });
         });
 };
- const Add_Single_Reminder=async (request, response) =>{
+const Add_Single_Reminder = async (request, response) => {
     try {
-        let data=request.body;
+        let data = request.body;
         // const eventTime = new Date(date_time);
         // const callTime = new Date(call_time);
         // const currentTime = new Date(Date.now());
@@ -239,26 +247,26 @@ const Remove_ = (request, response) => {
         //             reminder.user_id = user_id;
         //             reminder.frequency = frequency;
         let times = dividerTime(data.date_time, data.call_time, data.frequency);
-        let transactionData= {
-            payment_id:data.payment_id,
-            amount:data.amount,
+        let transactionData = {
+            payment_id: data.payment_id,
+            amount: data.amount,
             user_id: data.user_id,
-            status:data.status,
-            remarks: data.remarks
-        }
-        let remiderData={
-            category:data.category,
+            status: data.status,
+            remarks: data.remarks,
+        };
+        let remiderData = {
+            category: data.category,
             date_time: new Date(data.date_time),
-            title:data.title,
+            title: data.title,
             call_time: new Date(data.call_time),
-            call_times:times,
-            number:data.number,
-            source:data.source,
-            destination:data.destination,
-            message:data.message? data.message:null,
-            user_id:data.user_id,
-            frequency:data.frequency
-        }
+            call_times: times,
+            number: data.number,
+            source: data.source,
+            destination: data.destination,
+            message: data.message ? data.message : null,
+            user_id: data.user_id,
+            frequency: data.frequency,
+        };
         const user_id = request.user.data._id;
         if (!user_id) {
             response.status(400).json({
@@ -267,11 +275,19 @@ const Remove_ = (request, response) => {
         }
         await Reminder.create(remiderData);
         await Transaction.create(transactionData);
-        return response.status(201).json({message:"sucess"});
+        return response.status(201).json({ message: "sucess" });
     } catch (error) {
         console.log(`Error in adding single remider ****${error}`);
-        return response.status(501).json({message:"Internal server Error"});
+        return response.status(501).json({ message: "Internal server Error" });
     }
- }
+};
 
-module.exports = { Find_, FindAll_, Add_, Update_, Remove_, FindUser_, Add_Single_Reminder };
+module.exports = {
+    Find_,
+    FindAll_,
+    Add_,
+    Update_,
+    Remove_,
+    FindUser_,
+    Add_Single_Reminder,
+};

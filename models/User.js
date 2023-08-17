@@ -21,7 +21,10 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    subcription: String,
+    validSubscription:{
+        type:String,
+        default:"No Subscription"
+    },
     registerd_at: {
         type: Date,
         default: new Date(),
