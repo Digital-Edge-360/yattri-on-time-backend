@@ -36,15 +36,20 @@ const sendSMS = async (config) => {
     //     })
     //     .then((verification) => console.log(verification.status));
     try {
+        
+
         const otpResponse = await client.verify
             .services(process.env.TWILIO_SERVICE_SID)
             .verifications.create({
                 to: config.to,
                 channel: "sms",
             });
+
+
         return otpResponse;
     } catch (e) {
-        console.log(e.message);
+        console.log(e.message)
+        return null;
     }
     // try {
 

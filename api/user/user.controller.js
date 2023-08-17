@@ -244,7 +244,7 @@ const SendOtp_ = (request, response) => {
                         .then((res) => {
                             response.status(200).json({
                                 message: "user not exist",
-                                otp: res.otp,
+                                // otp: res.otp,
                             });
                         })
                         .catch((error) => {
@@ -256,10 +256,22 @@ const SendOtp_ = (request, response) => {
                 } else
                     sendVerificationSms(uphone)
                         .then((res) => {
+
+                           
+                            if(!res.status){
+                               return  response.status(200).json({
+                                    message: "user exist but otp not sent",
+                                    info: data,
+                                    otpSent:"false",
+                                   
+                                });  
+                            }
+
                             response.status(200).json({
                                 message: "user exist",
                                 info: data,
-                                otp: res.otp,
+                                otpSent:"true",
+                               
                             });
                         })
                         .catch((error) => {
