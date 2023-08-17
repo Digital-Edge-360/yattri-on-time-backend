@@ -36,7 +36,9 @@ app.use(
       formAction: [
         "'self'",
         "https://test.ccavenue.com",
-        "	https://secure.ccavenue.com",
+        "https://secure.ccavenue.com",
+        "http://ec2-52-207-129-114.compute-1.amazonaws.com:3100/api/payment/ccavRequest",
+        "https://ec2-52-207-129-114.compute-1.amazonaws.com:3100/api/payment/ccavRequest"
       ],
     },
   })
@@ -127,7 +129,8 @@ app.get("/", (req, res) => {
 // Rendering this temporarily to request ccAvenue server
 app.get("/paymentForm", function (req, res) {
   res.render("dataFrom.html",{
-    port:process.env.PORT
+    // Programatically setting the URL
+    PaymentBaseURL:`${req.protocol}://${req.get('host')}/api/payment`
   });
 });
 

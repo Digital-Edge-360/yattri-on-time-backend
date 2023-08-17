@@ -4,7 +4,7 @@
     <form
       method="POST"
       name="customerData"
-      action="http://localhost:<%= port %>/api/payment/ccavRequest"
+      action="<%= PaymentBaseURL %>/ccavRequest"
     >
       <table width="40%" height="100" border="1" align="center">
         <caption>
@@ -48,7 +48,7 @@
             <input
               type="text"
               name="redirect_url"
-              value="http://localhost:<%= port %>/api/payment/ccavResponse"
+              value="<%= PaymentBaseURL %>/ccavResponse"
             />
           </td>
         </tr>
@@ -58,7 +58,7 @@
             <input
               type="text"
               name="cancel_url"
-              value="http://localhost:<%= port %>/api/payment/ccavResponse"
+              value="<%= PaymentBaseURL %>/ccavResponse"
             />
           </td>
         </tr>
