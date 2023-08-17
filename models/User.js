@@ -5,6 +5,10 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
+    email: {
+        type: String,
+        required: true,
+    },
     phone: {
         type: String,
         required: true,
@@ -21,9 +25,9 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    validSubscription:{
-        type:String,
-        default:"No Subscription"
+    validSubscription: {
+        type: String,
+        default: "No Subscription",
     },
     registerd_at: {
         type: Date,
