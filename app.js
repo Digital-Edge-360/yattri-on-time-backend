@@ -128,6 +128,8 @@ app.get("/", (req, res) => {
 
 // Rendering this temporarily to request ccAvenue server
 app.get("/paymentForm", function (req, res) {
+  console.log(req.get('host'))
+  console.log(req)
   res.render("dataFrom.html",{
     // Programatically setting the URL
     PaymentBaseURL:`${req.protocol}://${req.get('host')}/api/payment`

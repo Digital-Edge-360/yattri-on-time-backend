@@ -244,6 +244,7 @@ const SendOtp_ = (request, response) => {
                         .then((res) => {
                             response.status(200).json({
                                 message: "user not exist",
+                                otpSent:"true",
                                 // otp: res.otp,
                             });
                         })
@@ -263,7 +264,7 @@ const SendOtp_ = (request, response) => {
                                     message: "user exist but otp not sent",
                                     info: data,
                                     otpSent:"false",
-                                   
+                                
                                 });  
                             }
 
