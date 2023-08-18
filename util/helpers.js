@@ -118,12 +118,11 @@ const convertISOStringToLocal = (isoString) => {
 // For Encrypting the request sending to the CCAvenue
 const EncryptCcavenueRequest = (payload) => {
   // parameter payload should be in string/stringify
-  let key = process.env.WORKING_KEY; // your working_key provided by bank
+  let key = process.env.WORKING_KEY; // working_id should be the 
 
   const method = "aes-256-gcm"; 
   const initVector = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(method, key, initVector);
-
   let encrypted = cipher.update(payload, "utf8", "hex");
   encrypted += cipher.final("hex");
   const tag = cipher.getAuthTag().toString("hex");

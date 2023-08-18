@@ -35,8 +35,9 @@ try {
     if(!email ||!password){
         return res.status(400).json({message:'please provide email and password'});
     }
-
+    
     const isAdmin=await Admin.findOne({email});
+
     if(isAdmin){
         return res.status(409).json({message:'user already exists'});
     }

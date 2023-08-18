@@ -12,6 +12,9 @@ const {
 
 
 const CcavRequestHandler = (request, response) => {
+
+
+
   const stringify_payload = qs.stringify({
     // integration_type:"iframe_normal",
     ...request.body,
@@ -19,16 +22,21 @@ const CcavRequestHandler = (request, response) => {
 
   const encryptionResponseData = EncryptCcavenueRequest(stringify_payload);
   
-  // CCAvenue accept request only in form of HTML Forms so we are rendering this form
-  response.render("./ccav_payment_request.html", {
+
+  response.status(200).json({
     encryptedData: encryptionResponseData,
-    access_code: process.env.ACCESS_CODE,
-  
   });
+
+  // CCAvenue accept request only in form of HTML Forms so we are rendering this form
+  // response.render("./ccav_payment_request.html", {
+  //   encryptedData: encryptionResponseData,
+  //   access_code: process.env.ACCESS_CODE,
+  
+  // });
 };
 
 const CcavResponseHandler = async (request, response) => {
-  console.log(request)
+
   const { encResp } = request.body;
   /* decrypting response */
   let decryptedJsonResponseData;
@@ -64,7 +72,8 @@ const CcavResponseHandler = async (request, response) => {
   }
 
   // Success logic goes here
-  response.status(200).json({ message: "successful" });
+  console.log(data);
+  response.status(200).json({ message: "successful" , data });
 };
 
 module.exports = { CcavRequestHandler, CcavResponseHandler  };
