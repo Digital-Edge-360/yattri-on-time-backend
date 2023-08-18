@@ -192,10 +192,10 @@ const Login_ = async (request, response) => {
 };
 
 const Register_ = (request, response) => {
-    let { phone, name } = request.body;
+    let { phone, name,  email } = request.body;
     // console.log(phone, name);
-    if (!phone || !name)
-        response.status(400).json({ message: "phone,name requied" });
+    if (!phone || !name || !email)
+        response.status(400).json({ message: "phone,name,email requied" });
     else if (!phoneValidator(phone))
         response.status(400).json({ message: "invalid phone number" });
     else {
@@ -208,6 +208,7 @@ const Register_ = (request, response) => {
                     data.phone = phone;
                     data.verified = true;
                     data.status = true;
+                    data.email = email;
                     data.save();
                     var token = jwt.sign({ data }, process.env.JWT_SECRET, {
                         expiresIn: "30d",

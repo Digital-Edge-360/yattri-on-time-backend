@@ -72,7 +72,6 @@ const CcavResponseHandler = async (request, response) => {
   }
 
   // Success logic goes here
-  console.log(data);
   response.status(200).json({ message: "successful" , data });
 };
 

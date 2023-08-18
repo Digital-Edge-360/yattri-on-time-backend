@@ -118,8 +118,20 @@ const convertISOStringToLocal = (isoString) => {
 // For Encrypting the request sending to the CCAvenue
 const EncryptCcavenueRequest = (payload) => {
   // parameter payload should be in string/stringify
-  let key = process.env.WORKING_KEY; // working_id should be the 
+  
+  //Function provided by CCAVENUE (Not working)
+  // let workingKey = process.env.WORKING_KEY;
+  // var m = crypto.createHash('md5');
+  // m.update(workingKey);
+  // var key = m.digest('binary');
+  // var iv = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f';	
+  // var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
+  // var encoded = cipher.update(payload,'utf8','hex');
+  // encoded += cipher.final('hex');
+  // return encoded;
 
+  // My algorithm
+  let key = process.env.WORKING_KEY; // working_id should be the 
   const method = "aes-256-gcm"; 
   const initVector = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(method, key, initVector);
@@ -132,6 +144,20 @@ const EncryptCcavenueRequest = (payload) => {
 // For decryption of response for API calls the request sending to the CCAvenue
 const DecryptCcavenueResponse = (encResp) => {
   // parameter encResp should be in string sent from the the response handeler
+  
+
+  //Function provided by CCAVENUE (Not Working)
+  // let workingKey = process.env.WORKING_KEY;
+  // var m = crypto.createHash('md5');
+  // m.update(workingKey)
+  // var key = m.digest('binary');
+  // var iv = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f';	
+  // var decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
+  // var decoded = decipher.update(encResp,'hex','utf8');
+  // decoded += decipher.final('utf8');
+  // return decoded;
+
+  // My Algorithm
   let key = process.env.WORKING_KEY;
   const method = "aes-256-gcm";
   const encryptedTextBuffer = Buffer.from(encResp, "hex");

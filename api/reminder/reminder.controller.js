@@ -156,19 +156,20 @@ const FindUser_ = (request, response) => {
             if (data == null) {
                 response.status(400).json({ message: "invalid id" });
             } else {
-                for (let i = 0; i < data.length; i++) {
-                    data[i].call_time = new Date(
-                        data[i].call_time
-                    ).toLocaleString(undefined, { timeZone: "Asia/Kolkata" });
-                    data[i].date_time = new Date(
-                        data[i].date_time
-                    ).toLocaleString(undefined, { timeZone: "Asia/Kolkata" });
-                    data[i].call_times = data[i].call_times.map((elem) => {
-                        return new Date(elem).toLocaleString(undefined, {
-                            timeZone: "Asia/Kolkata",
-                        });
-                    });
-                }
+                // Prevent from formatting by commenting out this code
+                // for (let i = 0; i < data.length; i++) {
+                //     data[i].call_time = new Date(
+                //         data[i].call_time
+                //     ).toLocaleString(undefined, { timeZone: "Asia/Kolkata" });
+                //     data[i].date_time = new Date(
+                //         data[i].date_time
+                //     ).toLocaleString(undefined, { timeZone: "Asia/Kolkata" });
+                //     data[i].call_times = data[i].call_times.map((elem) => {
+                //         return new Date(elem).toLocaleString(undefined, {
+                //             timeZone: "Asia/Kolkata",
+                //         });
+                //     });
+                // }
                 console.log("data", data);
                 response.status(200).json(data);
             }
