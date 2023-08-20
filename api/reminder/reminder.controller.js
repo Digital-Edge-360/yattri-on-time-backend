@@ -95,11 +95,11 @@ const Add_ = (request, response) => {
           reminder.save();
           console.log(call_time);
           const date = new Date(call_time);
-          console.log("working");
-          schedule.scheduleJob(date, () => {
-            // remindUser({ to: number, message: message });
-            console.log("working");
-          });
+
+          // schedule.scheduleJob(Date.now(), () => {
+          //   // remindUser({ to: number, message: message });
+          //   console.log("working");
+          // });
           response.status(201).json({ message: "data saved", data: reminder });
         }
       })

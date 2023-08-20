@@ -12,44 +12,37 @@ const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
 
-
 const app = express();
-
-
 
 app.use(cors());
 
 app.use(helmet());
 
-
 app.use((req, res, next) => {
-    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-    next();
-})
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  next();
+});
 // Setting content security policy to connect with ccAvenue
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-                              //Inline Script with this nonce will be executed only
-      scriptSrc: ["'self'" , "'nonce-d6b1f0544e8fe8c38d66017d6d0079d5'"],
+      //Inline Script with this nonce will be executed only
+      scriptSrc: ["'self'", "'nonce-d6b1f0544e8fe8c38d66017d6d0079d5'"],
       formAction: [
         "'self'",
         "https://test.ccavenue.com",
         "https://secure.ccavenue.com",
         "http://ec2-52-207-129-114.compute-1.amazonaws.com:3100/api/payment/ccavRequest",
-        "https://ec2-52-207-129-114.compute-1.amazonaws.com:3100/api/payment/ccavRequest"
+        "https://ec2-52-207-129-114.compute-1.amazonaws.com:3100/api/payment/ccavRequest",
       ],
     },
   })
 );
 
-
-
 app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   next();
-
 });
 
 /*************************************
@@ -69,6 +62,7 @@ const ReviewRouter = require("./api/review/review.route");
 const RemindRouter = require("./api/remind/remind.route");
 const PaymentRouter = require("./api/payment/payment.route");
 
+process.env.TZ = process.env.TZ;
 
 const connectDB = require("./db/connect.js");
 
@@ -120,18 +114,15 @@ app.use("/api/remind", RemindRouter);
 
 app.use("/api/payment", PaymentRouter);
 
-
 app.get("/", (req, res) => {
   res.send("Api is Working!");
 });
 
-
 // Rendering this temporarily to request ccAvenue server
 app.get("/paymentForm", function (req, res) {
-  
-  res.render("dataFrom.html",{
+  res.render("dataFrom.html", {
     // Programatically setting the URL
-    PaymentBaseURL:`${req.protocol}://${req.get('host')}/api/payment`
+    PaymentBaseURL: `${req.protocol}://${req.get("host")}/api/payment`,
   });
 });
 
