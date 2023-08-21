@@ -114,31 +114,37 @@ function checkReminders(frequency) {
           // const messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${reminder.category} from ${reminder.source} to ${reminder.destination} at ${date_time.split(',')[1].split(':')[0]} hours and ${date_time.split(',')[1].split(':')[1]} minutes. Your ${reminder.category} number is ${reminder.number} The message you wanted is: ${reminder.message}`;
           let messageToSay;
           if (reminder.language === "EN") {
-            messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${
+            messageToSay = `Hello ${
+              reminder.user_id.name
+            } welcome to Yatri Onn Time, you have booked a ${
               reminder.category
             } from ${reminder.source} to ${reminder.destination} on ${
               date_time.split(", ")[0]
             }. The message you wanted is: ${
               reminder.message
-            } Thank you for booking with us, we wish you a very happy journey.नमस्ते ${
+            } Thank you for booking with us, we wish you a very happy journey नमस्ते ${
               reminder.user_id.name
-            }, आपने ${reminder.source} से ${reminder.destination} के लिए एक ${
+            } Yatri Onn Time में आपका स्वागत है, आपने ${reminder.source} से ${
+              reminder.destination
+            } के लिए ${date_time.split(", ")[0].replaceAll("-", " ")} को एक ${
               reminder.category
-            } बुक किया है ${date_time.split(", ")[0]} को। आपका संदेश था: ${
+            } बुक किया है। आपका संदेश था: ${
               reminder.message
-            } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक बहुत खुश यात्रा की कामना करते हैं.`;
+            } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक सुखद यात्रा की कामना करते हैं`;
           } else {
-            messageToSay = `नमस्ते ${reminder.user_id.name}, आपने ${
-              reminder.source
-            } से ${reminder.destination} के लिए एक ${
-              reminder.category
-            } बुक किया है ${date_time.split(", ")[0]} को। आपका संदेश था: ${
-              reminder.message
-            } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक बहुत खुश यात्रा की कामना करते हैं.Hello ${
+            messageToSay = `नमस्ते ${
               reminder.user_id.name
-            }, you have booked a ${reminder.category} from ${
-              reminder.source
-            } to ${reminder.destination} on ${
+            } Yatri Onn Time में आपका स्वागत है, आपने ${reminder.source} से ${
+              reminder.destination
+            } के लिए ${date_time.split(", ")[0].replaceAll("-", " ")} को एक ${
+              reminder.category
+            } बुक किया है। आपका संदेश था: ${
+              reminder.message
+            } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक सुखद यात्रा की कामना करते हैं Hello ${
+              reminder.user_id.name
+            } welcome to Yatri Onn Time, you have booked a ${
+              reminder.category
+            } from ${reminder.source} to ${reminder.destination} on ${
               date_time.split(", ")[0]
             }. The message you wanted is: ${
               reminder.message
