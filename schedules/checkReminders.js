@@ -112,15 +112,25 @@ function checkReminders(frequency) {
           const hours = Math.floor(timeDiff / (1000 * 60 * 60));
           const minutes = Math.floor(timeDiff / (1000 * 60)) - hours * 60;
           // const messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${reminder.category} from ${reminder.source} to ${reminder.destination} at ${date_time.split(',')[1].split(':')[0]} hours and ${date_time.split(',')[1].split(':')[1]} minutes. Your ${reminder.category} number is ${reminder.number} The message you wanted is: ${reminder.message}`;
-          const messageToSay = `Hello ${
-            reminder.user_id.name
-          }, you have booked a ${reminder.category} from ${
-            reminder.source
-          } to ${reminder.destination} at ${date_time
-            .split(", ")[1]
-            .replaceAll(":", " ")}. The message you wanted is: ${
-            reminder.message
-          }`;
+          let messageToSay;
+          if (reminder.language === "EN") {
+            messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${
+              reminder.category
+            } from ${reminder.source} to ${reminder.destination} on ${
+              date_time.split(", ")[0]
+            }. The message you wanted is: ${
+              reminder.message
+            } Thank you for booking with us, we wish you a very happy journey`;
+          } else {
+            messageToSay = `नमस्ते ${reminder.user_id.name}, आपने ${
+              reminder.source
+            } से ${reminder.destination} के लिए एक ${
+              reminder.category
+            } बुक किया है ${date_time.split(", ")[0]} को। आपका संदेश था: ${
+              reminder.message
+            } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक बहुत खुश यात्रा की कामना करते हैं`;
+          }
+
           setTimeout(async () => {
             // todo: make Calls
             const status = await remindUser({

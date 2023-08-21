@@ -123,7 +123,7 @@ const EncryptCcavenueRequest = (payload) => {
   // let workingKey = process.env.WORKING_KEY;
   // var m = crypto.createHash("md5");
   // m.update(workingKey);
-  // var key = m.digest("binary");
+  // var key = "44 5c b0 ca 98 53 60 1e 90 a7 0e e4 69 ec e0 38";
   // var iv = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f";
   // var cipher = crypto.createCipheriv("aes-128-cbc", key, iv);
   // var encoded = cipher.update(payload, "utf8", "hex");
@@ -149,7 +149,7 @@ const DecryptCcavenueResponse = (encResp) => {
   // let workingKey = process.env.WORKING_KEY;
   // var m = crypto.createHash("md5");
   // m.update(workingKey);
-  // var key = m.digest("binary");
+  // var key = crypto.randomBytes(16);
   // var iv = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f";
   // var decipher = crypto.createDecipheriv("aes-128-cbc", key, iv);
   // var decoded = decipher.update(encResp, "hex", "utf8");

@@ -29,6 +29,7 @@ const Add_ = (request, response) => {
     destination,
     message,
     frequency,
+    language,
   } = request.body;
   let times;
   if (date_time && call_time && frequency) {
@@ -90,6 +91,7 @@ const Add_ = (request, response) => {
           reminder.message = message ? message : null;
           reminder.user_id = user_id;
           reminder.frequency = frequency;
+          reminder.language = language;
           data.reminder = data.reminder - 1;
           data.save();
           reminder.save();

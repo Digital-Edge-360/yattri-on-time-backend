@@ -45,7 +45,7 @@ const sendSMS = async (config) => {
 
     return otpResponse;
   } catch (e) {
-    console.log(e.message);
+    console.log(e);
     return null;
   }
   // try {

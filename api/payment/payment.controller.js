@@ -11,7 +11,6 @@ const {
 
 const CcavRequestHandler = (request, response) => {
   const stringify_payload = qs.stringify({
-    // integration_type:"iframe_normal",
     ...request.body,
   });
 
