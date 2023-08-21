@@ -120,7 +120,13 @@ function checkReminders(frequency) {
               date_time.split(", ")[0]
             }. The message you wanted is: ${
               reminder.message
-            } Thank you for booking with us, we wish you a very happy journey`;
+            } Thank you for booking with us, we wish you a very happy journey.नमस्ते ${
+              reminder.user_id.name
+            }, आपने ${reminder.source} से ${reminder.destination} के लिए एक ${
+              reminder.category
+            } बुक किया है ${date_time.split(", ")[0]} को। आपका संदेश था: ${
+              reminder.message
+            } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक बहुत खुश यात्रा की कामना करते हैं.`;
           } else {
             messageToSay = `नमस्ते ${reminder.user_id.name}, आपने ${
               reminder.source
@@ -128,7 +134,15 @@ function checkReminders(frequency) {
               reminder.category
             } बुक किया है ${date_time.split(", ")[0]} को। आपका संदेश था: ${
               reminder.message
-            } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक बहुत खुश यात्रा की कामना करते हैं`;
+            } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक बहुत खुश यात्रा की कामना करते हैं.Hello ${
+              reminder.user_id.name
+            }, you have booked a ${reminder.category} from ${
+              reminder.source
+            } to ${reminder.destination} on ${
+              date_time.split(", ")[0]
+            }. The message you wanted is: ${
+              reminder.message
+            } Thank you for booking with us, we wish you a very happy journey`;
           }
 
           setTimeout(async () => {
