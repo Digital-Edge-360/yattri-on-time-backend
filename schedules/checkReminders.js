@@ -2,7 +2,7 @@ const { Reminder } = require("../models/Reminder.js");
 const moment = require("moment");
 const cron = require("node-cron");
 const schedule = require("node-schedule");
-const { getISTTime } = require("../util/helpers.js");
+const { getISTTime, formatDateTimeHindi } = require("../util/helpers.js");
 const { remindUser } = require("../services/twilio.service.js");
 
 // function checkReminders(frequency) {
@@ -100,6 +100,9 @@ function checkReminders(frequency) {
         let date_time = new Date(reminder.date_time).toLocaleString(undefined, {
           timeZone: "Asia/Kolkata",
         });
+
+        const hindiDateTime = formatDateTimeHindi(reminder.date_time)
+
         console.log("check", date_time.split(","));
         let hour = date_time.split(",")[1].split(":")[0];
         console.log({ hour });
@@ -113,42 +116,31 @@ function checkReminders(frequency) {
           const minutes = Math.floor(timeDiff / (1000 * 60)) - hours * 60;
           // const messageToSay = `Hello ${reminder.user_id.name}, you have booked a ${reminder.category} from ${reminder.source} to ${reminder.destination} at ${date_time.split(',')[1].split(':')[0]} hours and ${date_time.split(',')[1].split(':')[1]} minutes. Your ${reminder.category} number is ${reminder.number} The message you wanted is: ${reminder.message}`;
           let messageToSay;
+
+          const hindiMessage = `नमस्ते ${
+            reminder.user_id.name
+          } Yatri Onn Time में आपका स्वागत है, आपने ${reminder.source} से ${
+            reminder.destination
+          } के लिए ${hindiDateTime} एक ${
+            reminder.category
+          } बुक किया है। आपका संदेश था: ${
+            reminder.message
+          } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक सुखद यात्रा की कामना करते हैं`;
+
+          const englishMessage = `Hello ${
+            reminder.user_id.name
+          } welcome to Yatri Onn Time, you have booked a ${
+            reminder.category
+          } from ${reminder.source} to ${reminder.destination} on ${
+            date_time.split(", ")[0]
+          } at ${date_time.split(", ")[1]}. The message you wanted is: ${
+            reminder.message
+          } Thank you for booking with us, we wish you a very happy journey `
+
           if (reminder.language === "EN") {
-            messageToSay = `Hello ${
-              reminder.user_id.name
-            } welcome to Yatri Onn Time, you have booked a ${
-              reminder.category
-            } from ${reminder.source} to ${reminder.destination} on ${
-              date_time.split(", ")[0]
-            }. The message you wanted is: ${
-              reminder.message
-            } Thank you for booking with us, we wish you a very happy journey नमस्ते ${
-              reminder.user_id.name
-            } Yatri Onn Time में आपका स्वागत है, आपने ${reminder.source} से ${
-              reminder.destination
-            } के लिए ${date_time.split(", ")[0].replaceAll("-", " ")} को एक ${
-              reminder.category
-            } बुक किया है। आपका संदेश था: ${
-              reminder.message
-            } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक सुखद यात्रा की कामना करते हैं`;
+            messageToSay = englishMessage + " " + hindiMessage;
           } else {
-            messageToSay = `नमस्ते ${
-              reminder.user_id.name
-            } Yatri Onn Time में आपका स्वागत है, आपने ${reminder.source} से ${
-              reminder.destination
-            } के लिए ${date_time.split(", ")[0].replaceAll("-", " ")} को एक ${
-              reminder.category
-            } बुक किया है। आपका संदेश था: ${
-              reminder.message
-            } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक सुखद यात्रा की कामना करते हैं Hello ${
-              reminder.user_id.name
-            } welcome to Yatri Onn Time, you have booked a ${
-              reminder.category
-            } from ${reminder.source} to ${reminder.destination} on ${
-              date_time.split(", ")[0]
-            }. The message you wanted is: ${
-              reminder.message
-            } Thank you for booking with us, we wish you a very happy journey`;
+            messageToSay = hindiMessage + " " + englishMessage;
           }
 
           setTimeout(async () => {

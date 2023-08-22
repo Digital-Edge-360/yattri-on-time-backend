@@ -173,6 +173,40 @@ const DecryptCcavenueResponse = (encResp) => {
   return data;
 };
 
+const formatDateTimeHindi = function(date_time) {
+
+  let formatedDate = new Date(date_time);
+
+  const Dateoptions = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: false,
+      timeZone: "Asia/Kolkata",
+  };
+
+
+  const hindiDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
+
+
+  formatedDate = formatedDate.toLocaleDateString("hi-IN", Dateoptions);
+
+  console.log(formatDateTimeHindi);
+
+
+  const hindiFormatedDate = formatedDate.replace(/[0-9]/g, (digit) => {
+      return hindiDigits[parseInt(digit)];
+  });
+
+
+  return hindiFormatedDate;
+}
+
+
+
 module.exports = {
   phoneValidator,
   formatPhone,
@@ -187,4 +221,5 @@ module.exports = {
   convertISOStringToLocal,
   EncryptCcavenueRequest,
   DecryptCcavenueResponse,
+  formatDateTimeHindi,
 };
