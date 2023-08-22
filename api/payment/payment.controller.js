@@ -56,20 +56,45 @@ const CcavResponseHandler = async (request, response) => {
 
       ccavResponse = decrypt(request.body.encResp, keyBase64, ivBase64);
       
-        response.status(200).json({
-        response:ccavResponse
-      });
-	// request.on('end', function () {
-	//     var pData = '';
-	//     pData = '<table border=1 cellspacing=2 cellpadding=2><tr><td>'	
-	//     pData = pData + ccavResponse.replace(/=/gi,'</td><td>')
-	//     pData = pData.replace(/&/gi,'</td></tr><tr><td>')
-	//     pData = pData + '</td></tr></table>'
-  //           htmlcode = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Response Handler</title></head><body><center><font size="4" color="blue"><b>Response Page</b></font><br>'+ pData +'</center><br></body></html>';
-  //           response.writeHeader(200, {"Content-Type": "text/html"});
-	//     response.write(htmlcode);
-	//     response.end();
-	// }); 	
+ 
+      const status = ccavResponse.split("&")[3].split("=")[1];
+      const userId = ccavResponse.split("&")[26].split("=")[1]
+      const subscriptionId = ccavResponse.split("&")[27].split("=")[1]
+
+      console.log(status , "this is my status")
+      console.log(userId , "this is my user id")
+      console.log(subscriptionId , "this is my subs id")
+
+      if(status === 'Success'){
+
+
+        const user = await User.findOne({
+          _id: userId,
+        });
+      
+        const subscription = await Subcription.findOne({
+          _id: subscriptionId,
+        });
+      
+        
+        if (!user) return response.status(404).json({ message: "Invalid user ID" });
+
+        if (!subscription)
+              return response.status(404).json({ message: "Invalid Subscription ID" });
+
+              user.validSubscription = subscription._id;
+              user.reminder += subscription.no_of_reminder;
+              user.save();
+
+              response.status(200).json({message:"Subscription charged"});
+
+
+      }else{
+        response.status(400).json({message:"Payment could not proceed"});
+      }
+
+
+ 	
 };
 
 const paymentResponseHandler = async (request, response) => {
