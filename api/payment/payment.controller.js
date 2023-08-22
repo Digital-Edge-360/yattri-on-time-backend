@@ -5,27 +5,30 @@ const crypto = require("crypto");
 // let nonce;
 const qs = require("querystring");
 const {
-  EncryptCcavenueRequest,
   DecryptCcavenueResponse,
+  encrypt,
+  decrypt
 } = require("../../util/helpers");
 
 const CcavRequestHandler = (request, response) => {
-  const stringify_payload = qs.stringify({
-    ...request.body,
-  });
 
-  const encryptionResponseData = EncryptCcavenueRequest(stringify_payload);
+  var body = '',
+  workingKey = process.env.WORKING_KEY,    //Put in the 32-Bit key shared by CCAvenues.
+  accessCode = process.env.ACCESS_CODE,    //Put in the Access Code shared by CCAvenues.
+  encRequest = '';
+  body = request.body.payment_string;
+  //Generate Md5 hash for the key and then convert in base64 string
+  var md5 = crypto.createHash('md5').update(workingKey).digest();
+  var keyBase64 = Buffer.from(md5).toString('base64');
 
+  //Initializing Vector and then convert in base64 string
+  var ivBase64 = Buffer.from([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d,0x0e, 0x0f]).toString('base64');
+  encRequest = encrypt(body, keyBase64, ivBase64); 
+        
   response.status(200).json({
-    encryptedData: encryptionResponseData,
+    encRec:encRequest,
   });
 
-  // CCAvenue accept request only in form of HTML Forms so we are rendering this form
-  // response.render("./ccav_payment_request.html", {
-  //   encryptedData: encryptionResponseData,
-  //   access_code: process.env.ACCESS_CODE,
-
-  // });
 };
 
 const CcavResponseHandler = async (request, response) => {
