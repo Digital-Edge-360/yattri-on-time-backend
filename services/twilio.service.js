@@ -132,7 +132,7 @@ const remindUser = async (remind) => {
   try {
     const result = await client.calls.create({
       //   url: fUrl,
-      twiml: `<?xml version="1.0" encoding="UTF-8"?><Response><Say language="en-IN" voice="Polly.Aditi">${remind.message}</Say></Response>`,
+      twiml: `<?xml version="1.0" encoding="UTF-8"?><Response><Say language="hi-IN" voice="Polly.Aditi">${remind.message}</Say></Response>`,
       to: remind.to,
       from: process.env.SENDER_PHONE_NUMBER,
     });
