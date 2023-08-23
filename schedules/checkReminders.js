@@ -119,23 +119,23 @@ function checkReminders(frequency) {
 
           const hindiMessage = `नमस्ते ${
             reminder.user_id.name
-          } Yatri Onn Time में आपका स्वागत है, आपने ${reminder.source} से ${
+          }, Yatri Onn Time में आपका स्वागत है. आपने ${reminder.source} से ${
             reminder.destination
           } के लिए ${hindiDateTime} एक ${
             reminder.category
           } बुक किया है। आपका संदेश था: ${
             reminder.message
-          } हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक सुखद यात्रा की कामना करते हैं`;
+          }. हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक सुखद यात्रा की कामना करते हैं...!`;
 
           const englishMessage = `Hello ${
             reminder.user_id.name
-          } welcome to Yatri Onn Time, you have booked a ${
+          }, welcome to Yatri Onn Time. You have booked a ${
             reminder.category
           } from ${reminder.source} to ${reminder.destination} on ${
             date_time.split(", ")[0]
-          } at ${date_time.split(", ")[1]}. The message you wanted is: ${
+          }, at ${date_time.split(", ")[1]}. The message you wanted is: ${
             reminder.message
-          } Thank you for booking with us, we wish you a very happy journey `
+          }. Thank you for booking with us, we wish you a very happy journey...! `
 
           if (reminder.language === "EN") {
             messageToSay = englishMessage + " " + hindiMessage;
