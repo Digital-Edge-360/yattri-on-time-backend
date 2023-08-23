@@ -50,13 +50,14 @@ const Add_ = (request, response) => {
 };
 
 const Update_ = (request, response) => {
-  let { name, phone, status } = request.body;
+  let { name, phone, status , email } = request.body;
   let validExt = ["jpg", "jpeg", "png"];
   User.findById(request.params.id)
     .then((user) => {
       if (user == null) response.status(400).json({ message: "invalid id" });
       else {
         user.name = name ? name : user.name;
+        user.email = email ? email : user.email;
         if (phone) {
           if (!phoneValidator(phone))
             return response
