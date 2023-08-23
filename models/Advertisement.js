@@ -13,6 +13,21 @@ const AdvertisementSchema = new Schema({
         type: String,
         required: false,
     },
+
+    description:{
+        type: String,
+        
+    },
+
+    description2:{
+        type: String,
+       
+    },
+
+    cta_text:{
+        type:String
+    },
+
     status: Boolean,
 });
 

@@ -2,13 +2,13 @@ const { Advertisement } = require("../../models/Advertisement");
 var fs = require("fs");
 
 const Add_ = (request, response) => {
-    let { title, url, status } = request.body;
+    let { title, url,description,description2,cta_text ,status } = request.body;
     if (title === undefined || status === undefined)
         response.status(400).json({ message: "title,status,image requied" });
     else if (!request?.files || !request?.files?.image)
         response
             .status(400)
-            .json({ message: "title,status,image requied bbbb" });
+            .json({ message: "title,status,image requied" });
     else {
         let validExt = ["jpg", "jpeg", "png"];
         let { size, name, md5 } = request.files.image;
@@ -20,15 +20,24 @@ const Add_ = (request, response) => {
             response.status(400).json({ message: "invalid image type" });
         else {
             let fname = md5 + "__" + Date.now() + "." + ext;
-            var uploadPath = __dirname + "/../../uploads/" + fname;
-            img.mv(uploadPath);
+            // var uploadPath = __dirname + "/../../uploads/" + fname;
+            // img.mv(uploadPath);
             let advertise = new Advertisement();
             advertise.image = fname;
             advertise.title = title;
             advertise.status = status;
             advertise.url = url ? url : null;
-            advertise.save();
-            response.status(201).json(advertise);
+            advertise.description = description;
+            advertise.description2 = description2;
+            advertise.cta_text = cta_text;
+
+ 
+                advertise.save();
+                response.status(200).json(advertise);
+
+    
+        
+            
         }
     }
 };
