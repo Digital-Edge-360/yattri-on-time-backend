@@ -77,11 +77,14 @@ const CcavResponseHandler = async (request, response) => {
               user.reminder += subscription.no_of_reminder;
               user.save();
 
-              response.status(200).json({message:"Subscription charged"});
+              //response.status(200).json({message:"Subscription charged"});
+
+              response.render('payment_sucessful.html');
 
 
       }else{
-        response.status(400).json({message:"Payment could not proceed"});
+        //response.status(400).json({message:"Payment could not proceed"});
+        response.render('payment_failed.html');
       }
 
 
