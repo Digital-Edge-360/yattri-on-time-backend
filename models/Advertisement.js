@@ -3,15 +3,16 @@ const Schema = mongoose.Schema;
 const AdvertisementSchema = new Schema({
     title: {
         type: String,
-        default: null,
+        required:true,
     },
     image: {
         type: String,
-        required: true,
+        // required: true,
+        default:"fsenfos"
     },
     url: {
         type: String,
-        required: false,
+        required: true,
     },
 
     description:{

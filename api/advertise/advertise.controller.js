@@ -1,5 +1,37 @@
 const { Advertisement } = require("../../models/Advertisement");
-var fs = require("fs");
+
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
+const { uploadFile } = require("../../services/aws.service");
+
+
+const AddNew = async(request , response) => {
+
+    try{
+        let {title ,url ,description ,description2 ,cta_text ,status} = request.body;
+
+        if(!title || !url) {
+            return response.status(400).json({message:"Advertisement must have a title and a link"})
+        }
+
+        const file = request.file;
+        const result = await uploadFile(file);
+        await unlinkFile(file.path)
+         const newAdvertisement = await Advertisement.create({...request.body , image:result.Location});
+
+        return response.status(201).json({data:newAdvertisement})
+
+
+    }catch(e){
+        console.log(e.message);
+        return response.status(500).json({message:"Internal server error"});
+    }
+
+
+}
+
 
 const Add_ = (request, response) => {
     let { title, url,description,description2,cta_text ,status } = request.body;
@@ -147,4 +179,4 @@ const Remove_ = (request, response) => {
         });
 };
 
-module.exports = { Find_, FindAll_, Add_, Update_, Remove_ };
+module.exports = { Find_, FindAll_, Add_, Update_, Remove_  , AddNew};
