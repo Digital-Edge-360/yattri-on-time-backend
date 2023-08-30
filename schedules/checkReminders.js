@@ -101,7 +101,7 @@ function checkReminders(frequency) {
           timeZone: "Asia/Kolkata",
         });
 
-        const hindiDateTime = formatDateTimeHindi(reminder.date_time)
+        const hindiDateTime = formatDateTimeHindi(reminder.date_time);
 
         console.log("check", date_time.split(","));
         let hour = date_time.split(",")[1].split(":")[0];
@@ -119,37 +119,30 @@ function checkReminders(frequency) {
           let hindiMessage;
           let englishMessage;
 
-          if(reminder.category === 'others'){
+          if (reminder.category === "others") {
+            hindiMessage = `नमस्ते, यात्री ऑन टाइम में आपका स्वागत है। यह ${reminder.title} के लिए आपका अनुस्मारक है कि आपको ${hindiDateTime} पर उपस्थित होना होगा। जो संदेश आप चाहते थे वह ${reminder.message} था। हमारे साथ बुकिंग करने के लिए धन्यवाद...!`;
 
-
-            hindiMessage = `नमस्ते, यात्री ऑन टाइम में आपका स्वागत है। यह ${reminder.title} के लिए आपका अनुस्मारक है कि आपको ${hindiDateTime} पर उपस्थित होना होगा। जो संदेश आप चाहते थे वह ${reminder.message} था। हमारे साथ बुकिंग करने के लिए धन्यवाद...!`
-
-            englishMessage = `Hello, welcome to Yatri Onn Time. This is your reminder for ${reminder.title} that you have to attend on ${date_time.split(", ")[0]}, at ${date_time.split(", ")[1]}. The message you wanted is: ${reminder.message}. Thank you for booking with us...!`
-
-          }else{
-
-            hindiMessage = `नमस्ते ${
-              reminder.user_id.name
-            }, Yatri Onn Time में आपका स्वागत है. आपने ${reminder.source} से ${
-              reminder.destination
-            } के लिए ${hindiDateTime} एक ${
-              reminder.category
-            } बुक किया है। आपका संदेश था: ${
+            englishMessage = `Hello, welcome to Yatri Onn Time. This is your reminder for ${
+              reminder.title
+            } that you have to attend on ${date_time.split(", ")[0]}, at ${
+              date_time.split(", ")[1]
+            }. The message you wanted is: ${
               reminder.message
-            }. हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक सुखद यात्रा की कामना करते हैं...!`
-
+            }. Thank you for booking with us...!`;
+          } else {
+            hindiMessage = `नमस्ते ${reminder.user_id.name}, Yatri Onn Time में आपका स्वागत है. आपने ${reminder.source} से ${reminder.destination} के लिए ${hindiDateTime} एक ${reminder.category}, संख्या ${reminder.number} बुक किया है। आपका संदेश था: ${reminder.message}. हमारे साथ बुक करने के लिए धन्यवाद, हम आपको एक सुखद यात्रा की कामना करते हैं...!`;
 
             englishMessage = `Hello ${
               reminder.user_id.name
             }, welcome to Yatri Onn Time. You have booked a ${
               reminder.category
-            } from ${reminder.source} to ${reminder.destination} on ${
-              date_time.split(", ")[0]
-            }, at ${date_time.split(", ")[1]}. The message you wanted is: ${
+            }, number ${reminder.number} from ${reminder.source} to ${
+              reminder.destination
+            } on ${date_time.split(", ")[0]}, at ${
+              date_time.split(", ")[1]
+            }. The message you wanted is: ${
               reminder.message
-            }. Thank you for booking with us, we wish you a very happy journey...! `
-
-
+            }. Thank you for booking with us, we wish you a very happy journey...! `;
           }
 
           if (reminder.language === "EN") {
