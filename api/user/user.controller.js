@@ -179,7 +179,7 @@ const Login_ = async (request, response) => {
 
 const Register_ = (request, response) => {
   let { phone, name, email } = request.body;
-  console.log(request.body);
+
   if (!phone || !name || !email)
     response.status(400).json({ message: "phone,name,email requied" });
   else if (!phoneValidator(phone))

@@ -4,9 +4,9 @@ const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
 
-const { uploadFile } = require("../../services/aws.service");
+const { uploadFile , deleteFile } = require("../../services/aws.service");
 
-
+// Created this new controller function because the old Add_ function not handelling file upload
 const AddNew = async(request , response) => {
 
     try{
@@ -17,7 +17,13 @@ const AddNew = async(request , response) => {
         }
 
         const file = request.file;
+
+        if(!file){
+            return response.status(400).json({message:"Advertisement must have an media"});
+        }
+
         const result = await uploadFile(file);
+        console.log(result)
         await unlinkFile(file.path)
          const newAdvertisement = await Advertisement.create({...request.body , image:result.Location});
 
@@ -62,13 +68,8 @@ const Add_ = (request, response) => {
             advertise.description = description;
             advertise.description2 = description2;
             advertise.cta_text = cta_text;
-
- 
-                advertise.save();
-                response.status(200).json(advertise);
-
-    
-        
+            advertise.save();
+            response.status(200).json(advertise);
             
         }
     }
@@ -163,6 +164,25 @@ const FindAll_ = (request, response) => {
  *Delete Data from Database and files from Storge
  */
 
+
+ // Created this new remove function because the the remove function not working as expected
+const RemoveNew = async(request , response) => {
+
+    try{
+        const addverisement = await Advertisement.findById(request.params.id);
+        if(!addverisement) response.status(404).json({ message: "invalid id, Not found" });
+        else{
+            const result = await deleteFile(addverisement);
+            await addverisement.deleteOne({_id: request.params.id});
+            response.status(202).json({ message: "data removed" });
+        }
+    }catch(err){
+        console.log(err.message);
+        return response.status(500).json({message:"Internal server error"});
+    }
+
+}
+
 const Remove_ = (request, response) => {
     Advertisement.findByIdAndDelete(request.params.id)
         .then((data) => {
@@ -179,4 +199,4 @@ const Remove_ = (request, response) => {
         });
 };
 
-module.exports = { Find_, FindAll_, Add_, Update_, Remove_  , AddNew};
+module.exports = { Find_, FindAll_, Add_, Update_, Remove_ , AddNew, RemoveNew};
