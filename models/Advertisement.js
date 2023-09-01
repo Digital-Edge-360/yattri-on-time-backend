@@ -1,35 +1,38 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const AdvertisementSchema = new Schema({
-    title: {
-        type: String,
-        required:true,
-    },
-    image: {
-        type: String,
-        // required: true,
-        default:"fsenfos"
-    },
-    url: {
-        type: String,
-        required: true,
-    },
+  title: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    // required: true,
+    default: "fsenfos",
+  },
+  url: {
+    type: String,
+    required: true,
+  },
 
-    description:{
-        type: String,
-        
-    },
+  description: {
+    type: String,
+  },
 
-    description2:{
-        type: String,
-       
-    },
+  description2: {
+    type: String,
+  },
 
-    cta_text:{
-        type:String
-    },
+  cta_text: {
+    type: String,
+  },
 
-    status: Boolean,
+  isVideo: {
+    type: String,
+    default: false,
+  },
+
+  status: Boolean,
 });
 
 const Advertisement = mongoose.model("Advertisement", AdvertisementSchema);
