@@ -7,7 +7,7 @@ const express = require("express");
 const path = require("path");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
-const fileUpload = require("express-fileupload");
+// const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
@@ -77,7 +77,7 @@ app.use(morgan("dev"));
 // host images
 app.use(express.static(path.join(__dirname, "uploads")));
 //To parse files
-app.use(fileUpload());
+// app.use(fileUpload());
 //To parse URL encoded data
 app.use(bodyParser.urlencoded({ extended: false }));
 //To parse json data
@@ -125,8 +125,6 @@ app.get("/paymentForm", function (req, res) {
     PaymentBaseURL: `${req.protocol}://${req.get("host")}/api/payment`,
   });
 });
-
-
 
 app.all("*", (req, res) => {
   res.status(404).send("Sorry, this is an invalid URL.");

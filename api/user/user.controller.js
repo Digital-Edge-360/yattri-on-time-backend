@@ -16,6 +16,7 @@ const { request } = require("http");
 const Add_ = (request, response) => {
   let validExt = ["jpg", "jpeg", "png"];
   let { name, phone, email, dob } = request.body;
+  console.log(request.body)
   let user = new User();
   user.name = name;
   user.phone = formatPhone(phone);
@@ -178,7 +179,7 @@ const Login_ = async (request, response) => {
 
 const Register_ = (request, response) => {
   let { phone, name, email } = request.body;
-  // console.log(phone, name);
+
   if (!phone || !name || !email)
     response.status(400).json({ message: "phone,name,email requied" });
   else if (!phoneValidator(phone))
