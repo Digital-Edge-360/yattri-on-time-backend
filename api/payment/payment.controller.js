@@ -46,9 +46,8 @@ const CcavResponseHandler = async (request, response) => {
 
   ccavResponse = decrypt(request.body.encResp, keyBase64, ivBase64);
 
+  const orderId = ccavResponse.split("&")[0].split("=")[1];
   const status = ccavResponse.split("&")[3].split("=")[1];
-
-  const orderId = ccavEncResponse.split("&")[0].split("=")[1];
   const userId = ccavResponse.split("&")[26].split("=")[1];
   const subscriptionId = ccavResponse.split("&")[27].split("=")[1];
 
