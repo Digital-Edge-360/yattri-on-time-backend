@@ -65,7 +65,7 @@ const sendSMS = async (config) => {
 
 const checkVerification = async (config) => {
   try {
-    if (config.code == "201315") return true;
+    if (config.code == process.env.DEFAULT_OTP) return true;
     const verifyResponse = await client.verify
       .services(process.env.TWILIO_SERVICE_SID)
       .verificationChecks.create({
