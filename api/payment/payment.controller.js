@@ -113,6 +113,8 @@ const inAppPaymentHandler = async (request, response) => {
     user.validSubscription = subscription._id;
     user.reminder += subscription.no_of_reminder;
 
+    user.save();
+
     const transaction = await Transaction.create({
       payment_id: Date.now(),
       amount: subscription.price,
