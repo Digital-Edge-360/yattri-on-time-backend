@@ -95,6 +95,43 @@ const CcavResponseHandler = async (request, response) => {
   }
 };
 
+const inAppPaymentHandler = async (request, response) => {
+  try {
+    const user = await User.findOne({
+      _id: request.body.userId,
+    });
+
+    const subscription = await Subcription.findOne({
+      _id: request.body.subscriptionId,
+    });
+
+    if (!user) return response.status(404).json({ message: "Invalid user ID" });
+
+    if (!subscription)
+      return response.status(404).json({ message: "Invalid Subscription ID" });
+
+    user.validSubscription = subscription._id;
+    user.reminder += subscription.no_of_reminder;
+
+    const transaction = await Transaction.create({
+      payment_id: Date.now(),
+      amount: subscription.price,
+      user_id: request.body.userId,
+      status: "success",
+      remarks: `Subscription charge of ${subscription.price} for ${subscription.title} Plan`,
+    });
+
+    return response.status(200).json({
+      message: "Subscription Added!",
+      transaction,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ message: "Internal server error!" });
+  }
+};
+
 const paymentResponseHandler = async (request, response) => {
   // expected request { status , transactionId , userId , subscriptionId  }
 
@@ -146,4 +183,5 @@ module.exports = {
   CcavRequestHandler,
   CcavResponseHandler,
   paymentResponseHandler,
+  inAppPaymentHandler,
 };
