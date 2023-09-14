@@ -74,12 +74,32 @@ const CcavResponseHandler = async (request, response) => {
     amount: subscription.price,
     user_id: userId,
     status: "pending",
-    remarks: `Subscription charge of ${subscription.price} for ${subscription.title} Plan`,
+    remarks: `Subscription charge ofssssds ${subscription.price} for ${subscription.title} Plan`,
   });
 
   if (status === "Success") {
-    user.validSubscription = subscription._id;
-    user.reminder += subscription.no_of_reminder;
+    if (user.validSubscription === "No Subscription") {
+      user.validSubscription = subscription._id;
+      user.reminder += subscription.no_of_reminder;
+    } else {
+      const currSubscription = await Subcription.findOne({
+        _id: user.validSubscription,
+      });
+
+      if (!currSubscription) {
+        return response
+          .status(404)
+          .json({ message: "not an valid current subscription" });
+      }
+
+      if (currSubscription.price > subscription.price) {
+        user.reminder += subscription.no_of_reminder;
+      } else {
+        user.validSubscription = subscription._id;
+        user.reminder += subscription.no_of_reminder;
+      }
+    }
+
     transaction.status = "success";
     transaction.save();
     user.save();
@@ -110,8 +130,27 @@ const inAppPaymentHandler = async (request, response) => {
     if (!subscription)
       return response.status(404).json({ message: "Invalid Subscription ID" });
 
-    user.validSubscription = subscription._id;
-    user.reminder += subscription.no_of_reminder;
+    if (user.validSubscription === "No Subscription") {
+      user.validSubscription = subscription._id;
+      user.reminder += subscription.no_of_reminder;
+    } else {
+      const currSubscription = await Subcription.findOne({
+        _id: user.validSubscription,
+      });
+
+      if (!currSubscription) {
+        return response
+          .status(404)
+          .json({ message: "not an valid current subscription" });
+      }
+
+      if (currSubscription.price > subscription.price) {
+        user.reminder += subscription.no_of_reminder;
+      } else {
+        user.validSubscription = subscription._id;
+        user.reminder += subscription.no_of_reminder;
+      }
+    }
 
     user.save();
 
@@ -134,56 +173,56 @@ const inAppPaymentHandler = async (request, response) => {
   }
 };
 
-const paymentResponseHandler = async (request, response) => {
-  // expected request { status , transactionId , userId , subscriptionId  }
+// const paymentResponseHandler = async (request, response) => {
+//   // expected request { status , transactionId , userId , subscriptionId  }
 
-  // 1) find the transaction
-  const transaction = await Transaction.findOne({
-    _id: request.body.transactionId,
-  });
+//   // 1) find the transaction
+//   const transaction = await Transaction.findOne({
+//     _id: request.body.transactionId,
+//   });
 
-  const user = await User.findOne({
-    _id: request.body.userId,
-  });
+//   const user = await User.findOne({
+//     _id: request.body.userId,
+//   });
 
-  const subscription = await Subcription.findOne({
-    _id: request.body.subscriptionId,
-  });
+//   const subscription = await Subcription.findOne({
+//     _id: request.body.subscriptionId,
+//   });
 
-  if (!transaction)
-    return response.status(404).json({ message: "Invalid transaction ID" });
+//   if (!transaction)
+//     return response.status(404).json({ message: "Invalid transaction ID" });
 
-  if (!user) return response.status(404).json({ message: "Invalid user ID" });
+//   if (!user) return response.status(404).json({ message: "Invalid user ID" });
 
-  if (!subscription)
-    return response.status(404).json({ message: "Invalid Subscription ID" });
+//   if (!subscription)
+//     return response.status(404).json({ message: "Invalid Subscription ID" });
 
-  // 2) check if the payment status is success full or failure
-  //a) if successful make the transaction status 'sucess' and add valid subscription to the user and add to suscribe model
-  if (request.body.status === "Success") {
-    user.validSubscription = subscription._id;
-    user.reminder += subscription.no_of_reminder;
-    transaction.status = "success";
-    user.save();
-    transaction.save();
+//   // 2) check if the payment status is success full or failure
+//   //a) if successful make the transaction status 'sucess' and add valid subscription to the user and add to suscribe model
+//   if (request.body.status === "Success") {
+//     user.validSubscription = subscription._id;
+//     user.reminder += subscription.no_of_reminder;
+//     transaction.status = "success";
+//     user.save();
+//     transaction.save();
 
-    return response
-      .status(200)
-      .json({ message: "Subscription successfully added", user, transaction });
-  }
-  //b) if the response is of failure then make transaction 'failed' and return failure message
-  else {
-    transaction.status = "failed";
-    transaction.save();
-    return response
-      .status(200)
-      .json({ message: "Subscription not added!", user, transaction });
-  }
-};
+//     return response
+//       .status(200)
+//       .json({ message: "Subscription successfully added", user, transaction });
+//   }
+//   //b) if the response is of failure then make transaction 'failed' and return failure message
+//   else {
+//     transaction.status = "failed";
+//     transaction.save();
+//     return response
+//       .status(200)
+//       .json({ message: "Subscription not added!", user, transaction });
+//   }
+// };
 
 module.exports = {
+  // paymentResponseHandler,
   CcavRequestHandler,
   CcavResponseHandler,
-  paymentResponseHandler,
   inAppPaymentHandler,
 };
