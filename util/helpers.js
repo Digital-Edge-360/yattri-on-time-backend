@@ -6,6 +6,8 @@ const crypto = require("crypto");
 const { Buffer } = require("node:buffer");
 const qs = require("querystring");
 
+const voucher_codes = require("voucher-code-generator");
+
 const phoneValidator = (phone) => {
   try {
     parsePhoneNumber(phone);
@@ -173,75 +175,74 @@ const DecryptCcavenueResponse = (encResp) => {
   return data;
 };
 
-const formatDateTimeHindi = function(date_time) {
-
+const formatDateTimeHindi = function (date_time) {
   let formatedDate = new Date(date_time);
 
   const Dateoptions = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: false,
-      timeZone: "Asia/Kolkata",
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false,
+    timeZone: "Asia/Kolkata",
   };
 
-
   const hindiDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
-
 
   formatedDate = formatedDate.toLocaleDateString("hi-IN", Dateoptions);
 
   console.log(formatDateTimeHindi);
 
-
   const hindiFormatedDate = formatedDate.replace(/[0-9]/g, (digit) => {
-      return hindiDigits[parseInt(digit)];
+    return hindiDigits[parseInt(digit)];
   });
 
-
   return hindiFormatedDate;
-}
-
-
+};
 
 function getAlgorithm(keyBase64) {
-    var key = Buffer.from(keyBase64, 'base64');
-    switch (key.length) {
-        case 16:
-            return 'aes-128-cbc';
-        case 32:
-            return 'aes-256-cbc';
-
-    }
-    throw new Error('Invalid key length: ' + key.length);
+  var key = Buffer.from(keyBase64, "base64");
+  switch (key.length) {
+    case 16:
+      return "aes-128-cbc";
+    case 32:
+      return "aes-256-cbc";
+  }
+  throw new Error("Invalid key length: " + key.length);
 }
 
-const encrypt = function(plainText, keyBase64, ivBase64) {
+const encrypt = function (plainText, keyBase64, ivBase64) {
+  const key = Buffer.from(keyBase64, "base64");
+  const iv = Buffer.from(ivBase64, "base64");
 
-    const key = Buffer.from(keyBase64, 'base64');
-    const iv = Buffer.from(ivBase64, 'base64');
+  const cipher = crypto.createCipheriv(getAlgorithm(keyBase64), key, iv);
+  let encrypted = cipher.update(plainText, "utf8", "hex");
+  encrypted += cipher.final("hex");
+  return encrypted;
+};
 
-    const cipher = crypto.createCipheriv(getAlgorithm(keyBase64), key, iv);
-    let encrypted = cipher.update(plainText, 'utf8', 'hex')
-    encrypted += cipher.final('hex');
-    return encrypted;
-}
+const decrypt = function (messagebase64, keyBase64, ivBase64) {
+  const key = Buffer.from(keyBase64, "base64");
+  const iv = Buffer.from(ivBase64, "base64");
 
-const decrypt = function(messagebase64, keyBase64, ivBase64) {
+  const decipher = crypto.createDecipheriv(getAlgorithm(keyBase64), key, iv);
+  let decrypted = decipher.update(messagebase64, "hex");
+  decrypted += decipher.final();
+  return decrypted;
+};
 
-    const key = Buffer.from(keyBase64, 'base64');
-    const iv = Buffer.from(ivBase64, 'base64');
+const generateCouponCode = function () {
+  const code = voucher_codes.generate({
+    length: 8,
+    count: 1,
+    charset: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+    prefix: "YON-",
+  });
 
-    const decipher = crypto.createDecipheriv(getAlgorithm(keyBase64), key, iv);
-    let decrypted = decipher.update(messagebase64, 'hex');
-    decrypted += decipher.final();
-    return decrypted;
-}
-
-
+  return code;
+};
 
 module.exports = {
   phoneValidator,
@@ -258,6 +259,7 @@ module.exports = {
   EncryptCcavenueRequest,
   DecryptCcavenueResponse,
   formatDateTimeHindi,
+  generateCouponCode,
   encrypt,
-  decrypt
+  decrypt,
 };

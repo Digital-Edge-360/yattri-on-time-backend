@@ -61,7 +61,7 @@ const FaqRouter = require("./api/faq/faq.route");
 const ReviewRouter = require("./api/review/review.route");
 const RemindRouter = require("./api/remind/remind.route");
 const PaymentRouter = require("./api/payment/payment.route");
-
+const CouponRouter = require("./api/coupon/coupon.route");
 process.env.TZ = process.env.TZ;
 
 const connectDB = require("./db/connect.js");
@@ -113,6 +113,8 @@ app.use("/api/review", ReviewRouter);
 app.use("/api/remind", RemindRouter);
 
 app.use("/api/payment", PaymentRouter);
+
+app.use("/api/coupon", CouponRouter);
 
 app.get("/", (req, res) => {
   res.send("Api is Working!");
