@@ -74,7 +74,8 @@ const CcavResponseHandler = async (request, response) => {
     amount: subscription.price,
     user_id: userId,
     status: "pending",
-    remarks: `Subscription charge ofssssds ${subscription.price} for ${subscription.title} Plan`,
+    remarks: `Subscription charge of ${subscription.price} for ${subscription.title} Plan`,
+    date: Date.now(),
   });
 
   if (status === "Success") {
@@ -160,6 +161,7 @@ const inAppPaymentHandler = async (request, response) => {
       user_id: request.body.userId,
       status: "success",
       remarks: `Subscription charge of ${subscription.price} for ${subscription.title} Plan`,
+      date: Date.now(),
     });
 
     return response.status(200).json({
