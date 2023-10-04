@@ -1,6 +1,8 @@
 const { Subcription } = require("../../models/Subcription");
 const { User } = require("../../models/User");
+const { Product } = require("../../models/Product");
 const { Transaction } = require("../../models/Transaction");
+const { Order } = require("../../models/Order");
 const crypto = require("crypto");
 // let nonce;
 const qs = require("querystring");
@@ -29,22 +31,44 @@ const CcavRequestHandler = (request, response) => {
 };
 
 const CcavStoreResponseHandler = async (request, response) => {
-  var ccavEncResponse = "",
-    ccavResponse = "",
-    workingKey = process.env.WORKING_KEY, //Put in the 32-Bit key shared by CCAvenues.
-    ccavPOST = "";
+  try {
+    var ccavEncResponse = "",
+      ccavResponse = "",
+      workingKey = process.env.WORKING_KEY, //Put in the 32-Bit key shared by CCAvenues.
+      ccavPOST = "";
 
-  //Generate Md5 hash for the key and then convert in base64 string
-  var md5 = crypto.createHash("md5").update(workingKey).digest();
-  var keyBase64 = Buffer.from(md5).toString("base64");
+    //Generate Md5 hash for the key and then convert in base64 string
+    var md5 = crypto.createHash("md5").update(workingKey).digest();
+    var keyBase64 = Buffer.from(md5).toString("base64");
 
-  //Initializing Vector and then convert in base64 string
-  var ivBase64 = Buffer.from([
-    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
-    0x0c, 0x0d, 0x0e, 0x0f,
-  ]).toString("base64");
+    //Initializing Vector and then convert in base64 string
+    var ivBase64 = Buffer.from([
+      0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
+      0x0c, 0x0d, 0x0e, 0x0f,
+    ]).toString("base64");
 
-  ccavResponse = decrypt(request.body.encResp, keyBase64, ivBase64);
+    ccavResponse = decrypt(request.body.encResp, keyBase64, ivBase64);
+
+    const orderId = ccavResponse.split("&")[0].split("=")[1];
+    const status = ccavResponse.split("&")[3].split("=")[1];
+    const userId = ccavResponse.split("&")[26].split("=")[1];
+    const productId = ccavResponse.split("&")[27].split("=")[1];
+
+    const user = await User.findOne({ _id: userId });
+    const product = await Product.findOne({ _id: productId });
+
+    if (!user) return response.status(404).json({ message: "No user found" });
+    if (!product)
+      return response.status(404).json({ message: "No product found" });
+
+    const order = await Order.create({
+      user: userId,
+      price: product.price,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return response.status(500).json({ message: "Internal server error" });
+  }
 };
 
 const CcavResponseHandler = async (request, response) => {
