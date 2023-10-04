@@ -28,6 +28,25 @@ const CcavRequestHandler = (request, response) => {
   });
 };
 
+const CcavStoreResponseHandler = async (request, response) => {
+  var ccavEncResponse = "",
+    ccavResponse = "",
+    workingKey = process.env.WORKING_KEY, //Put in the 32-Bit key shared by CCAvenues.
+    ccavPOST = "";
+
+  //Generate Md5 hash for the key and then convert in base64 string
+  var md5 = crypto.createHash("md5").update(workingKey).digest();
+  var keyBase64 = Buffer.from(md5).toString("base64");
+
+  //Initializing Vector and then convert in base64 string
+  var ivBase64 = Buffer.from([
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
+    0x0c, 0x0d, 0x0e, 0x0f,
+  ]).toString("base64");
+
+  ccavResponse = decrypt(request.body.encResp, keyBase64, ivBase64);
+};
+
 const CcavResponseHandler = async (request, response) => {
   var ccavEncResponse = "",
     ccavResponse = "",
