@@ -61,7 +61,9 @@ const FaqRouter = require("./api/faq/faq.route");
 const ReviewRouter = require("./api/review/review.route");
 const RemindRouter = require("./api/remind/remind.route");
 const PaymentRouter = require("./api/payment/payment.route");
-
+const ProductRouter = require("./api/product/product.route");
+const AddressRouter = require("./api/address/address.route");
+const OrderRouter = require("./api/order/order.route");
 process.env.TZ = process.env.TZ;
 
 const connectDB = require("./db/connect.js");
@@ -111,9 +113,10 @@ app.use("/api/faq", FaqRouter);
 app.use("/api/review", ReviewRouter);
 // app.use("/files/voices", RemindRouter);
 app.use("/api/remind", RemindRouter);
-
 app.use("/api/payment", PaymentRouter);
-
+app.use("/api/product", ProductRouter);
+app.use("/api/address", AddressRouter);
+app.use("/api/order", OrderRouter);
 app.get("/", (req, res) => {
   res.send("Api is Working!");
 });
