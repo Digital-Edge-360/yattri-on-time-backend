@@ -16,7 +16,7 @@ const { request } = require("http");
 const Add_ = (request, response) => {
   let validExt = ["jpg", "jpeg", "png"];
   let { name, phone, email, dob } = request.body;
-  console.log(request.body)
+  console.log(request.body);
   let user = new User();
   user.name = name;
   user.phone = formatPhone(phone);
@@ -51,7 +51,7 @@ const Add_ = (request, response) => {
 };
 
 const Update_ = (request, response) => {
-  let { name, phone, status , email } = request.body;
+  let { name, phone, status, email } = request.body;
   let validExt = ["jpg", "jpeg", "png"];
   User.findById(request.params.id)
     .then((user) => {
@@ -195,6 +195,7 @@ const Register_ = (request, response) => {
           data.verified = true;
           data.status = true;
           data.email = email;
+          data.registerd_at = Date.now();
           data.save();
           var token = jwt.sign({ data }, process.env.JWT_SECRET, {
             expiresIn: "30d",

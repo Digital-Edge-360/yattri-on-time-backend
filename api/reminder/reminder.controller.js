@@ -251,6 +251,7 @@ const Add_Single_Reminder = async (request, response) => {
       user_id: data.user_id,
       status: data.status,
       remarks: data.remarks,
+      date: Date.now(),
     };
     let remiderData = {
       category: data.category,
