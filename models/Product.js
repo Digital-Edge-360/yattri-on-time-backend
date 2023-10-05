@@ -22,6 +22,9 @@ const ProductSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  createdAt: {
+    type: Date,
+  },
 });
 
 const Product = mongoose.model("Product", ProductSchema);

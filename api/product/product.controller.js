@@ -26,6 +26,7 @@ const addProduct = async (req, res) => {
 
     const product = await Product.create({
       ...req.body,
+      createdAt: Date.now(),
       image: result.Location,
     });
 
@@ -38,7 +39,7 @@ const addProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({}).sort({ createdAt: -1 });
 
     if (products.length == 0)
       return res.status(404).json({ message: "No product found" });
