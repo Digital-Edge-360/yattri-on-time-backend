@@ -2,7 +2,10 @@ const { Order } = require("../../models/Order");
 
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find({});
+    const orders = await Order.find({})
+      .populate("user")
+      .populate("product")
+      .populate("address");
 
     if (!orders || orders.length == 0) {
       return res.status(404).json({ message: "No orders to show" });
@@ -17,7 +20,10 @@ const getAllOrders = async (req, res) => {
 
 const getOrdersByUser = async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user.data._id });
+    const orders = await Order.find({ user: req.user.data._id })
+      .populate("user")
+      .populate("product")
+      .populate("address");
 
     if (!orders || orders.length == 0) {
       return res.status(404).json({ message: "No orders to show" });
