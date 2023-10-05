@@ -76,10 +76,10 @@ const updateProduct = async (req, res) => {
       fileLink = result.Location;
     }
 
-    const { name, description, price } = req.body;
+    const { name, description, price, inStock } = req.body;
     const updatedProduct = await Product.findOneAndUpdate(
       { _id: req.params.id },
-      { name, description, price, image: fileLink },
+      { name, description, price, image: fileLink, inStock },
       {
         new: true,
       }
