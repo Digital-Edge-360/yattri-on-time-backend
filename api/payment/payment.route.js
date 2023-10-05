@@ -2,12 +2,13 @@ const router = require("express").Router();
 const {
   CcavRequestHandler,
   CcavResponseHandler,
+  CcavStoreResponseHandler,
   inAppPaymentHandler,
 } = require("./payment.controller.js");
 
 router.post("/ccavRequest", CcavRequestHandler);
 router.post("/ccavResponse", CcavResponseHandler);
-
+router.post("/ccavStoreResponse", CcavStoreResponseHandler);
 router.post("/in_app_payment", inAppPaymentHandler);
 
 /*To handle all invalid request */

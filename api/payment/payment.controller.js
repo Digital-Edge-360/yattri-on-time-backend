@@ -3,6 +3,7 @@ const { User } = require("../../models/User");
 const { Product } = require("../../models/Product");
 const { Transaction } = require("../../models/Transaction");
 const { Order } = require("../../models/Order");
+const { Address } = require("../../models/Address");
 const crypto = require("crypto");
 // let nonce;
 const qs = require("querystring");
@@ -53,18 +54,43 @@ const CcavStoreResponseHandler = async (request, response) => {
     const status = ccavResponse.split("&")[3].split("=")[1];
     const userId = ccavResponse.split("&")[26].split("=")[1];
     const productId = ccavResponse.split("&")[27].split("=")[1];
+    const addressId = ccavResponse.split("&")[28].split("=")[1];
 
     const user = await User.findOne({ _id: userId });
     const product = await Product.findOne({ _id: productId });
+    const address = await Address.findOne({ _id: addressId });
 
     if (!user) return response.status(404).json({ message: "No user found" });
     if (!product)
       return response.status(404).json({ message: "No product found" });
+    if (!address)
+      return response.status(404).json({ message: "No address found" });
 
     const order = await Order.create({
       user: userId,
       price: product.price,
+      address: addressId,
+      product: productId,
     });
+
+    const transaction = await Transaction.create({
+      payment_id: orderId,
+      amount: product.price,
+      user_id: userId,
+      status: "pending",
+      remarks: `Charge of ${product.price} for order of ${product.name}`,
+      date: Date.now(),
+    });
+
+    if (status === "Success") {
+      transaction.status = "success";
+      transaction.save();
+      response.render("payment_sucessful.html");
+    } else {
+      transaction.status = "failed";
+      transaction.save();
+      response.render("payment_failed.html");
+    }
   } catch (error) {
     console.log(error.message);
     return response.status(500).json({ message: "Internal server error" });
@@ -270,4 +296,5 @@ module.exports = {
   CcavRequestHandler,
   CcavResponseHandler,
   inAppPaymentHandler,
+  CcavStoreResponseHandler,
 };
