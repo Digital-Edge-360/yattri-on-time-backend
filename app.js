@@ -64,6 +64,7 @@ const PaymentRouter = require("./api/payment/payment.route");
 const ProductRouter = require("./api/product/product.route");
 const AddressRouter = require("./api/address/address.route");
 const OrderRouter = require("./api/order/order.route");
+const CartRouter = require("./api/cart/cart.route");
 process.env.TZ = process.env.TZ;
 
 const connectDB = require("./db/connect.js");
@@ -117,6 +118,7 @@ app.use("/api/payment", PaymentRouter);
 app.use("/api/product", ProductRouter);
 app.use("/api/address", AddressRouter);
 app.use("/api/order", OrderRouter);
+app.use("/api/cart", CartRouter);
 app.get("/", (req, res) => {
   res.send("Api is Working!");
 });
@@ -140,7 +142,7 @@ checkReminders(1); //checks in every 59 minutes.
 // const deleteReminders = require("./schedules/deleteReminders.js");
 // deleteReminders(1);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3100;
 
 // const encrypted = EncryptCcavenueRequest("Hello World");
 
