@@ -54,7 +54,8 @@ const addToCart = async (req, res) => {
           product: productId,
           quantity: quantity,
           totalForIndividualProduct: itemPrice,
-          itemPrice: price  
+          itemPrice: price,
+          inStock: product.inStock
       });
 
     }
