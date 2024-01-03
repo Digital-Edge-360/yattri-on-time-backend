@@ -19,22 +19,22 @@ const CartSchema = new mongoose.Schema({
       image: String,
       inStock: Boolean,
       quantity: { 
-        type: Number,
-        default: 1
+        type: String,
+        default: '1'
       },
       totalForIndividualProduct: {
-        type: Number, 
-        default: 0
+        type: String, 
+        default: '0'
       },
       itemPrice: {
-        type: Number,
-        default: 0  
+        type: String,
+        default: '0'  
       }
     }
   ],
   cartTotal: {
-    type: Number,
-    default: 0  
+    type: String,
+    default: '0'  
   }
 });
 

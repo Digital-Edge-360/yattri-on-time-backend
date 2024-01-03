@@ -1,7 +1,6 @@
 // cart.controller.js
 
 const { Cart } = require('../../models/Cart');
-const { User } = require('../../models/User');
 const { Product } = require('../../models/Product'); 
 
 
@@ -26,7 +25,10 @@ const addToCart = async (req, res) => {
 
       if(itemIndex > -1) {
         // Product exists in cart
-        cart.items[itemIndex].quantity += quantity;
+        var qty = (parseInt(cart.items[itemIndex].quantity) + parseInt(quantity)).toString();
+        console.log("c>>>>>"+qty);
+
+        cart.items[itemIndex].quantity = qty;
         price = product.price;
     
         // Update totals
@@ -62,7 +64,7 @@ const addToCart = async (req, res) => {
 
     let newCartTotal = 0;
     cart.items.forEach(item => {
-      newCartTotal += item.totalForIndividualProduct;
+      newCartTotal = parseInt(newCartTotal) + parseInt(item.totalForIndividualProduct);
     });
     cart.cartTotal = newCartTotal;
 
@@ -110,7 +112,7 @@ const removeFromCart = async (req, res) => {
     let newCartTotal = 0;
 
     cart.items.forEach(item => {
-      newCartTotal += item.totalForIndividualProduct
+      newCartTotal = parseInt(newCartTotal) + parseInt(item.totalForIndividualProduct)
     });
 
     cart.cartTotal = newCartTotal;
@@ -153,7 +155,7 @@ const getUserCart = async (req, res) => {
       item.totalForIndividualProduct = item.quantity * product.price;
 
       // Update cart total  
-      newCartTotal += item.totalForIndividualProduct;
+      newCartTotal = parseInt(newCartTotal) + parseInt(item.totalForIndividualProduct);
 
     }
 
