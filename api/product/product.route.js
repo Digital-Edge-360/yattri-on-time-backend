@@ -7,6 +7,7 @@ const {
   updateProduct,
   deleteProduct,
   getProduct,
+  rateProduct,
 } = require("./product.controller");
 const upload = multer({ dest: "uploads/" });
 const router = require("express").Router();
@@ -21,6 +22,7 @@ router.patch(
   upload.single("image"),
   updateProduct
 );
+router.put('/:id/rating', validateTocken, rateProduct);
 router.delete("/:id", validateTocken, adminOnly, deleteProduct);
 router.all("*", (request, response) => {
   response.status(500).json({ message: "invalid request" });

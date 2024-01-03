@@ -92,6 +92,29 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const rateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rating } = req.body;
+
+    const product = await Product.findById(id);
+
+    if(!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    product.rating = rating;
+    
+    await product.save();
+
+    res.json(product);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);  
+  }
+}
+
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findOne({ _id: req.params.id });
@@ -113,4 +136,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getProduct,
+  rateProduct,
 };

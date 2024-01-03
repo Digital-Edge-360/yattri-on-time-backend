@@ -6,6 +6,10 @@ const ProductSchema = new Schema({
     type: String,
     required: [true, "A product must have a name"],
   },
+  rating: {
+    type: String,
+    default: "0"
+  },
   description: {
     type: String,
     required: [true, "A product must have a description"],
