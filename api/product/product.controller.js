@@ -3,12 +3,27 @@ const { uploadFile, deleteFile } = require("../../services/aws.service");
 
 const addProduct = async (req, res) => {
   try {
-    const { name, description, price } = req.body;
+    const {
+      name,
+      description,
+      price,
+      specification1,
+      specification2,
+      specification3,
+    } = req.body;
 
-    if (!name || !description || !price) {
-      return res
-        .status(400)
-        .json({ message: "A product must have a name,description and price" });
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !specification1 ||
+      !specification2 ||
+      !specification3
+    ) {
+      return res.status(400).json({
+        message:
+          "A product must have a name,description,price and all the specifications",
+      });
     }
 
     const file = req.file;
@@ -33,7 +48,7 @@ const addProduct = async (req, res) => {
     return res.status(201).json({ data: product });
   } catch (error) {
     console.log(error.message);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -76,10 +91,27 @@ const updateProduct = async (req, res) => {
       fileLink = result.Location;
     }
 
-    const { name, description, price, inStock } = req.body;
+    const {
+      name,
+      description,
+      price,
+      inStock,
+      specification1,
+      specification2,
+      specification3,
+    } = req.body;
     const updatedProduct = await Product.findOneAndUpdate(
       { _id: req.params.id },
-      { name, description, price, image: fileLink, inStock },
+      {
+        name,
+        description,
+        price,
+        image: fileLink,
+        inStock,
+        specification1,
+        specification2,
+        specification3,
+      },
       {
         new: true,
       }
@@ -94,26 +126,82 @@ const updateProduct = async (req, res) => {
 
 const rateProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { rating } = req.body;
+    const { userId } = req; // from validated token
+    const { productId, rating } = req.body;
 
-    const product = await Product.findById(id);
-
-    if(!product) {
-      return res.status(404).json({ message: "Product not found" });
+    if (typeof rating !== "number" || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: "Rating must be number 1-5" });
     }
 
-    product.rating = rating;
-    
+    const product = await Product.findOne({ _id: req.params.id }).select(
+      "ratings avgRating"
+    );
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Initialize ratings if null
+    if (!product.ratings) {
+      product.ratings = [];
+    }
+
+    // Migrate ratings without user
+    const hasInvalidRating = product.ratings.some((r) => !r.user);
+
+    if (hasInvalidRating) {
+      product.ratings = product.ratings.filter((r) => r.user);
+      await product.save();
+    }
+    // Add new rating
+    product.ratings.push({
+      user: userId,
+      rating,
+    });
+
+    // Calculate avg rating
+    const ratingsSum = product.ratings.reduce((s, r) => s + r.rating, 0);
+    const ratingsCount = product.ratings.length;
+    const avgRating = ratingsCount > 0 ? ratingsSum / ratingsCount : 0;
+
+    const existingRating = product.ratings.find((r) => r.user.equals(userId));
+
+    if (existingRating) {
+      // update
+      existingRating.rating = rating;
+    } else {
+      // new rating
+      product.ratings.push({ user: userId, rating });
+    }
+
+    product.avgRating = avgRating;
+
+    product.avgRating = await Product.aggregate([
+      { $match: { _id: productId } },
+      {
+        $project: {
+          _id: 0,
+          avgRating: { $avg: "$ratings.rating" },
+        },
+      },
+    ]);
+
     await product.save();
 
-    res.json(product);
+    // calculate confidence
+    const confidence = wilsonScore(product);
 
+    res.json({
+      avgRating: product.avgRating,
+      confidence,
+    });
+
+    res.json(product);
   } catch (err) {
-    console.error(err);
-    res.status(500).send(err);  
+    console.log(err);
+    return res.status(500).json({ message: err });
   }
-}
+};
 
 const deleteProduct = async (req, res) => {
   try {
