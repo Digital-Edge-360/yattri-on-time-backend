@@ -28,14 +28,14 @@ const addProduct = async (req, res) => {
 
     const file = req.file;
 
+    if (!file) {
+      return res.status(400).json({ message: "No Image Uploaded" });
+    }
+
     if (file.size > 10000000)
       return res
         .status(400)
         .json({ message: "Image should be less than 10 MB" });
-
-    if (!file) {
-      return res.status(400).json({ message: "Product must have an image" });
-    }
 
     const result = await uploadFile(file);
 
@@ -47,7 +47,7 @@ const addProduct = async (req, res) => {
 
     return res.status(201).json({ data: product });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return res.status(500).json({ message: error.message });
   }
 };
