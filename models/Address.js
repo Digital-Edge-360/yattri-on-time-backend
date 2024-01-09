@@ -7,6 +7,10 @@ const AddressSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  name: {
+    type: String,
+    required: [true, "Address must have a name"],
+  },
   house_no: {
     type: String,
     required: [true, "Address must have a house number"],
@@ -29,6 +33,11 @@ const AddressSchema = new Schema({
   pincode: {
     type: Number,
     required: [true, "Address must have a pincode"],
+  },
+
+  saveAs: {
+    type: String,
+    required: [true, "Address must have a saveAs"],
   },
 });
 
