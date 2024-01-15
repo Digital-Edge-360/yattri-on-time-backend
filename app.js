@@ -154,8 +154,7 @@ const PORT = process.env.PORT || 3100;
 
 // Server config
 const config = {
-  port: 443,
-  port2: 3100,
+  port: 3100,
   httpsOptions: {
     key: fs.readFileSync("client-key.pem"),
     cert: fs.readFileSync("client-cert.pem"),
@@ -163,16 +162,12 @@ const config = {
 };
 
 const httpsServer = https.createServer(config.httpsOptions, app);
-const httpsServer2 = https.createServer(config.httpsOptions, app);
 
 // Start HTTPS servers
 httpsServer.listen(config.port, () => {
   console.log(`HTTPS server running on port ${config.port}`);
 });
 
-httpsServer2.listen(config.port2, () => {
-  console.log(`HTTPS server running on port ${config.port2}`);
-});
 // app.listen(PORT, () => {
 //   connectDB(process.env.MONGO_DB_URL);
 //   console.log(`Api Running on port ${PORT}`);
