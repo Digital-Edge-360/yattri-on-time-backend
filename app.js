@@ -4,8 +4,6 @@ require("dotenv").config();
  * Import All The Package From Node Modules
  ********************************************/
 const express = require("express");
-const https = require(`https`);
-const fs = require(`fs`);
 const path = require("path");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
@@ -152,23 +150,7 @@ const PORT = process.env.PORT || 3100;
 
 // DecryptCcavenueResponse(encrypted);
 
-// Server config
-const config = {
-  port: 3100,
-  httpsOptions: {
-    key: fs.readFileSync("client-key.pem"),
-    cert: fs.readFileSync("client-cert.pem"),
-  },
-};
-
-const httpsServer = https.createServer(config.httpsOptions, app);
-
-// Start HTTPS servers
-httpsServer.listen(config.port, () => {
-  console.log(`HTTPS server running on port ${config.port}`);
+app.listen(PORT, () => {
+  connectDB(process.env.MONGO_DB_URL);
+  console.log(`Api Running on port ${PORT}`);
 });
-
-// app.listen(PORT, () => {
-//   connectDB(process.env.MONGO_DB_URL);
-//   console.log(`Api Running on port ${PORT}`);
-// });
